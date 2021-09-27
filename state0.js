@@ -1,10 +1,11 @@
-var demo = {}, centerX = 1000/2, centerY = 400/2;;
+var demo = {}, centerX = 1000/2, centerY = 400/2, turn = true;
 demo.state0 = function(){};
 demo.state0.prototype = {
     preload: function(){
         game.load.image("background", "pix/sunrise.jpg");
         game.load.image("purple", "pix/darkPurple.png");
         game.load.spritesheet('walk', "pix/walk.png", 44, 61);
+        game.load.image('bullet', 'pix/bullet.png');
     },
     create: function(){
         game.physics.startSystem(Phaser.Physics.ARCADE);
@@ -46,6 +47,12 @@ demo.state0.prototype = {
         //add controls
         cursors = game.input.keyboard.createCursorKeys()
 
+        //add bullets
+        bullets = game.add.group();
+        bullets.enableBody = true;
+        bullets.physicsBodyType = Phaser.Physics.ARCADE;
+        bullet = bullets.createMultiple(5000, 'bullet');
+
 
     },
     update: function(){
@@ -70,20 +77,42 @@ demo.state0.prototype = {
             char1.body.velocity.x = -200;
             char1.animations.play('walk', 20, true);
             char1.scale.setTo(-.75,.75)
+            turn = false;
             }
     else if (cursors.right.isDown){
             char1.body.velocity.x = 200;
             char1.animations.play('walk', 20, true);
             char1.scale.setTo(.75,.75)
+            turn = true;
             }
     else{
         char1.animations.stop('walk');
         char1.frame = 0;
     }      
+    if (game.input.activePointer.isDown){
+        fire();
+    }
+    }
+        }
     
-        
+
+    function fire(){
+        console.log('firing');
+        var bullet = bullets.getFirstDead();
+        bullet.reset(char1.x, char1.y);
+        if (turn == true){
+            bullet.reset(char1.x, char1.y);
+            bullet.scale.setTo(1,1);
+            bullet.body.velocity.x = 400;
+        }
+        else{
+            bullet.reset(char1.x, char1.y);
+            bullet.scale.setTo(-1,1);
+            bullet.body.velocity.x = -400;
         }
     }
+    
+
 
 
 
