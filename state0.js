@@ -8,7 +8,7 @@ demo.state0.prototype = {
     },
     create: function(){
         game.physics.startSystem(Phaser.Physics.ARCADE);
-
+        game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
         game.add.sprite(0,0,"background")
     
 
