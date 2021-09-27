@@ -33,6 +33,7 @@ demo.state0.prototype = {
         }
         //create character 
         char1 = game.add.sprite(900,10, 'walk');
+        char1.scale.setTo(.75,.75);
         char1.frame = 0;
         char1.anchor.x = .5
         char1.animations.add('walk', [0, 1, 2, 3, 4, 5]);
@@ -68,12 +69,12 @@ demo.state0.prototype = {
     if (cursors.left.isDown){
             char1.body.velocity.x = -200;
             char1.animations.play('walk', 20, true);
-            char1.scale.setTo(-1,1)
+            char1.scale.setTo(-.75,.75)
             }
     else if (cursors.right.isDown){
             char1.body.velocity.x = 200;
             char1.animations.play('walk', 20, true);
-            char1.scale.setTo(1,1)
+            char1.scale.setTo(.75,.75)
             }
     else{
         char1.animations.stop('walk');
