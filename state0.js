@@ -4,7 +4,7 @@ demo.state0.prototype = {
     preload: function(){
         game.load.image("background", "pix/sunrise.jpg");
         game.load.image("back_wall", "pix/back-walls.png");
-        game.load.image("purple", "pix/darkPurple.png");
+        game.load.image("purple", "pix/purple3.jpg");
         game.load.spritesheet('walk', "pix/walk2.png", 128, 128);
         game.load.image('bullet', 'pix/bullet.png');
     },
