@@ -3,6 +3,7 @@ demo.state0 = function(){};
 demo.state0.prototype = {
     preload: function(){
         game.load.image("background", "pix/sunrise.jpg");
+        game.load.image("back_wall", "pix/back-walls.png");
         game.load.image("purple", "pix/darkPurple.png");
         game.load.spritesheet('walk', "pix/walk2.png", 128, 128);
         game.load.image('bullet', 'pix/bullet.png');
@@ -11,6 +12,10 @@ demo.state0.prototype = {
         game.physics.startSystem(Phaser.Physics.ARCADE);
         game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
         game.add.sprite(0,0,"background")
+
+        back_wall = game.add.sprite(0, 0, "back_wall"); // NEW CAVE BACKGROUND
+        back_wall.height = game.height;
+        back_wall.width = game.width;
     
 
         // create land group
