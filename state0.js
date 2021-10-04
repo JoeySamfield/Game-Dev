@@ -4,7 +4,7 @@ demo.state0.prototype = {
     preload: function(){
         game.load.image("background", "pix/sunrise.jpg");
         game.load.image("purple", "pix/darkPurple.png");
-        game.load.spritesheet('walk', "pix/walk.png", 44, 61);
+        game.load.spritesheet('walk', "pix/walk2.png", 128, 128);
         game.load.image('bullet', 'pix/bullet.png');
     },
     create: function(){
@@ -34,10 +34,10 @@ demo.state0.prototype = {
         }
         //create character 
         char1 = game.add.sprite(900,10, 'walk');
-        char1.scale.setTo(.75,.75);
+        char1.scale.setTo(.25,.25);
         char1.frame = 0;
         char1.anchor.x = .5
-        char1.animations.add('walk', [0, 1, 2, 3, 4, 5]);
+        char1.animations.add('walk', [0, 1, 2, 3, 4, 5,6,7,8,9,10,11,12,13,14,15]);
 
         //add gravity and physics
         game.physics.arcade.enable(char1)
@@ -76,13 +76,13 @@ demo.state0.prototype = {
     if (cursors.left.isDown){
             char1.body.velocity.x = -200;
             char1.animations.play('walk', 20, true);
-            char1.scale.setTo(-.75,.75)
+            char1.scale.setTo(-.25,.25)
             turn = false;
             }
     else if (cursors.right.isDown){
             char1.body.velocity.x = 200;
             char1.animations.play('walk', 20, true);
-            char1.scale.setTo(.75,.75)
+            char1.scale.setTo(.25,.25)
             turn = true;
             }
     else{
