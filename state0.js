@@ -1,4 +1,4 @@
-var demo = {}, centerX = 1000/2, centerY = 400/2, turn = true;
+var demo = {}, centerX = 1000/2, centerY = 400/2, turn = true, nextFire = 0, fireRate = 200, bullet, land;
 demo.state0 = function(){};
 demo.state0.prototype = {
     preload: function(){
@@ -27,7 +27,7 @@ demo.state0.prototype = {
         let platformList = [[0,260,30,500],[600,260,30,500], [800,150,50,500], [300,150,50,400], [500,70,30,500], [300,0,150,30],[0,80,30,150],[150,170,30,150]]
         
         for (i = 0; i < platformList.length; i++) {
-            var platform = land.create(platformList[i][0],platformList[i][1],"purple")
+            platform = land.create(platformList[i][0],platformList[i][1],"purple")
             platform.height = platformList[i][2]
             platform.width = platformList[i][3]
             platform.body.immovable = true
@@ -51,7 +51,9 @@ demo.state0.prototype = {
         bullets = game.add.group();
         bullets.enableBody = true;
         bullets.physicsBodyType = Phaser.Physics.ARCADE;
-        bullet = bullets.createMultiple(5000, 'bullet');
+        bullet = bullets.createMultiple(200, 'bullet');
+        bullets.setAll('checkWorldBounds', true);
+        bullets.setAll('outOfBoundsKill', true);
 
 
     },
@@ -59,6 +61,7 @@ demo.state0.prototype = {
 
         var stand = game.physics.arcade.collide(char1, land);
         char1.body.velocity.x = 0;
+        hitWall = game.physics.arcade.collide(bullet, land);
         
     
 
@@ -92,24 +95,32 @@ demo.state0.prototype = {
     if (game.input.activePointer.isDown){
         fire();
     }
+    
+    if (hitWall){
+        bullet.kill();
+    }
     }
         }
     
 
     function fire(){
-        console.log('firing');
-        var bullet = bullets.getFirstDead();
-        bullet.reset(char1.x, char1.y);
-        if (turn == true){
+        if(game.time.now > nextFire) {
+            nextFire = game.time.now + fireRate;
+            console.log('firing');
+            bullet = bullets.getFirstDead();
             bullet.reset(char1.x, char1.y);
-            bullet.scale.setTo(1,1);
-            bullet.body.velocity.x = 400;
-        }
-        else{
-            bullet.reset(char1.x, char1.y);
-            bullet.scale.setTo(-1,1);
-            bullet.body.velocity.x = -400;
-        }
+            if (turn == true){
+                bullet.reset(char1.x, char1.y);
+                bullet.scale.setTo(1,1);
+                bullet.body.velocity.x = 500;
+            }
+            else{
+                bullet.reset(char1.x, char1.y);
+                bullet.scale.setTo(-1,1);
+                bullet.body.velocity.x = -500;
+            }
+    }
+
     }
     
 
