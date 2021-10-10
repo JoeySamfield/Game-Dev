@@ -70,7 +70,7 @@ demo.state0.prototype = {
         game.physics.arcade.overlap(bullets, land, this.hitWall)
     
 
-    if (cursors.up.isDown && stand)
+    if (game.input.keyboard.isDown(Phaser.Keyboard.W) && stand)
     {  
         if(char1.body.touching.down) {
             char1.body.velocity.y = -200;
@@ -81,13 +81,13 @@ demo.state0.prototype = {
         }
     
     }
-    if (cursors.left.isDown){
+    if (game.input.keyboard.isDown(Phaser.Keyboard.A)){
             char1.body.velocity.x = -200;
             char1.animations.play('walk', 20, true);
             char1.scale.setTo(-.25,.25)
             turn = false;
             }
-    else if (cursors.right.isDown){
+    else if (game.input.keyboard.isDown(Phaser.Keyboard.D)){
             char1.body.velocity.x = 200;
             char1.animations.play('walk', 20, true);
             char1.scale.setTo(.25,.25)
@@ -97,7 +97,7 @@ demo.state0.prototype = {
         char1.animations.stop('walk');
         char1.frame = 0;
     }      
-    if (game.input.activePointer.isDown){
+    if (game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)){
         fire();
     }
     
