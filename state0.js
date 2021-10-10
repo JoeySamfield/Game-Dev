@@ -1,4 +1,4 @@
-var demo = {}, centerX = 1000/2, centerY = 400/2, turn = true, nextFire = 0, fireRate = 200, bullet, land;
+var demo = {}, centerX = 1000/2, centerY = 400/2, turn = true, nextFire = 0, fireRate = 200, bullet, land, platform;
 demo.state0 = function(){};
 demo.state0.prototype = {
     preload: function(){
@@ -20,7 +20,7 @@ demo.state0.prototype = {
 
         // create land group
         land = game.add.group()
-
+        game.physics.enable(land);
         land.enableBody = true
 
         //create ground
@@ -56,7 +56,7 @@ demo.state0.prototype = {
         bullets = game.add.group();
         bullets.enableBody = true;
         bullets.physicsBodyType = Phaser.Physics.ARCADE;
-        bullet = bullets.createMultiple(200, 'bullet');
+        bullets.createMultiple(200, 'bullet');
         bullets.setAll('checkWorldBounds', true);
         bullets.setAll('outOfBoundsKill', true);
 
@@ -66,8 +66,8 @@ demo.state0.prototype = {
 
         var stand = game.physics.arcade.collide(char1, land);
         char1.body.velocity.x = 0;
-        hitWall = game.physics.arcade.collide(bullet, land);
-        
+        //check for overlap between bullets and walls, call function to kill bullet sprite
+        game.physics.arcade.overlap(bullets, land, this.hitWall)
     
 
     if (cursors.up.isDown && stand)
@@ -101,13 +101,11 @@ demo.state0.prototype = {
         fire();
     }
     
-    if (hitWall){
-        bullet.kill();
+    },
+    hitWall: function(b){
+        b.kill();
     }
-    }
-        }
-    
-
+}
     function fire(){
         if(game.time.now > nextFire) {
             nextFire = game.time.now + fireRate;
@@ -124,11 +122,7 @@ demo.state0.prototype = {
                 bullet.scale.setTo(-1,1);
                 bullet.body.velocity.x = -500;
             }
-    }
-
-    }
     
 
-
-
-
+        }
+    }   
