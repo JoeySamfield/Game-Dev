@@ -70,12 +70,12 @@ demo.state0.prototype = {
         bullets.setAll('outOfBoundsKill', true);
 
         //add monsters
-        enemys = game.add.group();
-        enemys.enableBody = true;
-        enemys.physicsBodyType = Phaser.Physics.ARCADE;
-        game.physics.arcade.enable(enemys);
+        enemies = game.add.group();
+        enemies.enableBody = true;
+        enemies.physicsBodyType = Phaser.Physics.ARCADE;
+        game.physics.arcade.enable(enemies);
 
-        monster = enemys.create(600, 10, 'monster');
+        monster = enemies.create(600, 10, 'monster');
         monster.anchor.x = .5
         monster.anchor.y = .5
         monster.body.gravity.y = 400;
@@ -96,12 +96,13 @@ demo.state0.prototype = {
     update: function(){
 
         var stand = game.physics.arcade.collide(char1, land);
-        var enemystand = game.physics.arcade.collide(enemys, land);
+        var enemystand = game.physics.arcade.collide(enemies, land);
         char1.body.velocity.x = 0;
         //check for overlap between bullets and walls, call function to kill bullet sprite
         game.physics.arcade.overlap(bullets, land, this.hitWall);
         game.physics.arcade.overlap(rocks, char1, this.hitPlayer);
         game.physics.arcade.overlap(rocks, land, this.rockLand);
+        game.physics.arcade.overlap(bullets, enemies, this.killEnemy);
     
 
     if (game.input.keyboard.isDown(Phaser.Keyboard.W) && stand)
@@ -159,7 +160,14 @@ demo.state0.prototype = {
     },
     rockLand: function(r, l){
         r.kill();
+    },
+    killEnemy: function(b, e){
+        b.kill();
+        e.kill();
+        e.life = false;
     }
+
+
 
 }
     function fire(){
