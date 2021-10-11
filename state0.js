@@ -1,11 +1,11 @@
-var demo = {}, centerX = 1000/2, centerY = 400/2, turn = true, nextFire = 0, fireRate = 200, bullet, land, platform, rockRate = 3000, nextRock1 = 0, nextRock2 = 0;
+var demo = {}, centerX = 1000/2, centerY = 400/2, turn = true, nextFire = 0, fireRate = 500, bullet, land, platform, rockRate = 3000, nextRock1 = 0, nextRock2 = 0, nextRock3 = 0, nextRock4 = 0;
 demo.state0 = function(){};
 demo.state0.prototype = {
     preload: function(){
         game.load.image("background", "pix/sunrise.jpg");
         game.load.image("back_wall", "pix/back-walls.png");
         game.load.image("purple", "pix/purple3.jpg");
-        game.load.spritesheet('walk', "pix/walk2.png", 128, 128);
+        game.load.spritesheet('walk', "pix/walkRevolver.png", 128, 128);
         game.load.image('bullet', 'pix/bullet.png');
         game.load.image('rocker', 'pix/enemy.png');
         game.load.image('rock', 'pix/rock.png');
@@ -75,7 +75,7 @@ demo.state0.prototype = {
         enemies.physicsBodyType = Phaser.Physics.ARCADE;
         game.physics.arcade.enable(enemies);
 
-        rocker1 = enemies.create(600, 10, 'rocker');
+        rocker1 = enemies.create(350, 70, 'rocker');
         rocker1.anchor.x = .5
         rocker1.anchor.y = .5
         rocker1.body.gravity.y = 400;
@@ -88,6 +88,20 @@ demo.state0.prototype = {
         rocker2.body.gravity.y = 400;
         rocker2.body.collideWorldBounds = true;
         rocker2.life = true;
+
+        rocker3 = enemies.create(50, 50, 'rocker');
+        rocker3.anchor.x = .5
+        rocker3.anchor.y = .5
+        rocker3.body.gravity.y = 400;
+        rocker3.body.collideWorldBounds = true;
+        rocker3.life = true;
+
+        rocker4 = enemies.create(650, 225, 'rocker');
+        rocker4.anchor.x = .5
+        rocker4.anchor.y = .5
+        rocker4.body.gravity.y = 400;
+        rocker4.body.collideWorldBounds = true;
+        rocker4.life = true;
         
         //add rocks
         rocks = game.add.group()
@@ -157,6 +171,18 @@ demo.state0.prototype = {
             this.throw(rocker2);
     }
     }
+    if(rocker3.life == true){
+        if (game.time.now > nextRock3){
+            nextRock3 = game.time.now + rockRate;
+            this.throw(rocker3);
+    }
+    }
+    if(rocker4.life == true){
+        if (game.time.now > nextRock4){
+            nextRock4 = game.time.now + rockRate;
+            this.throw(rocker4);
+    }
+    }
     },
     throw: function(m){
         console.log('rocker');
@@ -192,15 +218,15 @@ demo.state0.prototype = {
             bullet.reset(char1.x, char1.y);
             if (turn == true){
                 console.log(game.time.now)
-                bullet.reset(char1.x, char1.y);
-                bullet.scale.setTo(1,1);
-                bullet.body.velocity.x = 500;
+                bullet.reset(char1.x, char1.y+10);
+                bullet.scale.setTo(.5,.5);
+                bullet.body.velocity.x = 1000;
             }
             else{
                 console.log(game.time.now)
-                bullet.reset(char1.x, char1.y);
-                bullet.scale.setTo(-1,1);
-                bullet.body.velocity.x = -500;
+                bullet.reset(char1.x, char1.y+10);
+                bullet.scale.setTo(-.5,.5);
+                bullet.body.velocity.x = -1000;
             }
     
 
