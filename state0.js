@@ -1,4 +1,4 @@
-var demo = {}, centerX = 1024/2, centerY = 416/2, turn = true, nextFire = 0, fireRate = 500, bullet, land, platform, charHP = 100, rockRate = 2000, nextRock1 = 0, nextRock2 = 0, nextRock3 = 0, nextRock4 = 0;
+var demo = {}, centerX = 1024/2, centerY = 416/2, turn = true, nextFire = 0, fireRate = 500, bullet, land, platform, charHP = 100, rockRate = 2000, nextRock1 = 0, nextRock2 = 0, nextRock3 = 0, nextRock4 = 0, enviro;
 demo.state0 = function(){};
 demo.state0.prototype = {
     preload: function(){
@@ -10,6 +10,7 @@ demo.state0.prototype = {
         game.load.spritesheet('walk', "pix/walkRevolver.png", 128, 128);
         game.load.spritesheet('rocker', "pix/rocker.png", 128, 128);
         game.load.spritesheet('rocker_backwards', "pix/rocker.png", 128, 128);
+        game.load.spritesheet('water_drip', 'pix/water_drip.png', 32, 96);
         game.load.image('bullet', 'pix/bullet.png');
         game.load.image('rock', 'pix/thrown_rock.png');
         game.load.image('blackSquare', 'pix/blackBack.jpg');
@@ -81,7 +82,7 @@ demo.state0.prototype = {
         cursors = game.input.keyboard.createCursorKeys()
 
         //create game camera
-        //game.world.setBounds(0, 0, 1000, 400);
+        //game.world.setBounds(0, 0, 1024, 416);
         //game.camera.follow(char1);
         //game.camera.deadzone = new Phaser.Rectangle(centerX - 150, 75, 300, 50);
         
@@ -93,6 +94,11 @@ demo.state0.prototype = {
         bullets.createMultiple(200, 'bullet');
         bullets.setAll('checkWorldBounds', true);
         bullets.setAll('outOfBoundsKill', true);
+
+        // add environmental elements
+        drip1 = game.add.sprite(950, 160, "water_drip");
+        drip1.animations.add("dripping", [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59]);
+        drip1.animations.play("dripping", 24, true);
 
         //add rockers
         enemies = game.add.group();
