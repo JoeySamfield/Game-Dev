@@ -9,8 +9,9 @@ demo.state0.prototype = {
         game.load.image("purple", "pix/purple3.jpg");
         game.load.spritesheet('walk', "pix/walkRevolver.png", 128, 128);
         game.load.spritesheet('rocker', "pix/rocker.png", 128, 128);
+        game.load.spritesheet('rocker_backwards', "pix/rocker.png", 128, 128);
         game.load.image('bullet', 'pix/bullet.png');
-        game.load.image('rock', 'pix/rock.png');
+        game.load.image('rock', 'pix/thrown_rock.png');
         game.load.image('blackSquare', 'pix/blackBack.jpg');
         game.load.image('redSquare', 'pix/redBack.jfif');
 
@@ -108,7 +109,8 @@ demo.state0.prototype = {
         rocker1.body.gravity.y = 400;
         rocker1.body.collideWorldBounds = true;
         rocker1.life = 2;
-        //rocker1.animations.add("throw",[0, 1, 2, 3, 4, 5,6,7,8])
+        rocker1.animations.add("rocker",[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3, 4, 5]); // added zeros for better pace
+        rocker1.animations.add("rocker_backwards", [5, 4, 3, 2, 1, 0]);
 
         rocker2 = enemies.create(300, 225, 'rocker');
         rocker2.scale.setTo(.40,.40)
@@ -117,7 +119,7 @@ demo.state0.prototype = {
         rocker2.body.gravity.y = 400;
         rocker2.body.collideWorldBounds = true;
         rocker2.life = 2;
-        //rocker2.animation.add("throw",[0, 1, 2, 3, 4, 5,6,7,8])
+        rocker2.animations.add("rocker",[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3, 4, 5]); // added zeros for better pace
 
         rocker3 = enemies.create(50, 50, 'rocker');
         rocker3.scale.setTo(.40,.40)
@@ -126,7 +128,7 @@ demo.state0.prototype = {
         rocker3.body.gravity.y = 400;
         rocker3.body.collideWorldBounds = true;
         rocker3.life = 2;
-        //rocker3.animation.add("throw",[0, 1, 2, 3, 4, 5,6,7,8])
+        rocker3.animations.add("rocker",[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3, 4, 5]); // added zeros for better pace
 
         rocker4 = enemies.create(650, 225, 'rocker');
         rocker4.scale.setTo(.40,.40)
@@ -135,7 +137,7 @@ demo.state0.prototype = {
         rocker4.body.gravity.y = 400;
         rocker4.body.collideWorldBounds = true;
         rocker4.life = 2;
-        //rocker4.animation.add("throw",[0, 1, 2, 3, 4, 5,6,7,8])
+        rocker4.animations.add("rocker",[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3, 4, 5]); // added zeros for better pace
         
         //add rocks
         rocks = game.add.group()
@@ -179,7 +181,7 @@ demo.state0.prototype = {
             }
     else if (game.input.keyboard.isDown(Phaser.Keyboard.D)){
             char1.body.velocity.x = 200;
-            char1.animations.play('walk', 2, true);
+            char1.animations.play('walk', 20, true);
             char1.scale.setTo(.25,.25)
             turn = true;
             }
@@ -195,26 +197,32 @@ demo.state0.prototype = {
     if(rocker1.life > 0){
         if (game.time.now > nextRock1){
             nextRock1 = game.time.now + rockRate;
-            //rocker1.animations.play("throw",8,false)
+            rocker1.animations.play("rocker",10,false);
             this.throw(rocker1);
+            //rocker1.animations.stop("rocker");
+            //rocker1.animations.play("rocker_backwards", 8, false);
+            //rocker1.animations.stop("rocker");
         }
 
     }
     if(rocker2.life > 0){
         if (game.time.now > nextRock2){
             nextRock2 = game.time.now + rockRate;
+            rocker2.animations.play("rocker",10,false);
             this.throw(rocker2);
     }
     }
     if(rocker3.life > 0){
         if (game.time.now > nextRock3){
             nextRock3 = game.time.now + rockRate;
+            rocker3.animations.play("rocker",10,false);
             this.throw(rocker3);
     }
     }
     if(rocker4.life > 0){
         if (game.time.now > nextRock4){
             nextRock4 = game.time.now + rockRate;
+            rocker4.animations.play("rocker",10,false);
             this.throw(rocker4);
     }
     }
