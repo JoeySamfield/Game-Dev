@@ -1,4 +1,4 @@
-var demo = {}, centerX = 500/2, centerY = 200/2, turn = true, nextFire = 0, fireRate = 200, bullet, land, platform, rockRate = 3000, nextRock = 0;
+var demo = {}, centerX = 500/2, centerY = 200/2, turn = true, nextFire = 0, fireRate = 200, bullet, land, platform, rockRate = 3000, nextRock1 = 0, nextRock2 = 0;
 demo.state0 = function(){};
 demo.state0.prototype = {
     preload: function(){
@@ -7,7 +7,7 @@ demo.state0.prototype = {
         game.load.image("purple", "pix/purple3.jpg");
         game.load.spritesheet('walk', "pix/walk2.png", 128, 128);
         game.load.image('bullet', 'pix/bullet.png');
-        game.load.image('monster', 'pix/enemy.png');
+        game.load.image('rocker', 'pix/enemy.png');
         game.load.image('rock', 'pix/rock.png');
 
     },
@@ -69,18 +69,25 @@ demo.state0.prototype = {
         bullets.setAll('checkWorldBounds', true);
         bullets.setAll('outOfBoundsKill', true);
 
-        //add monsters
+        //add rockers
         enemies = game.add.group();
         enemies.enableBody = true;
         enemies.physicsBodyType = Phaser.Physics.ARCADE;
         game.physics.arcade.enable(enemies);
 
-        monster = enemies.create(600, 10, 'monster');
-        monster.anchor.x = .5
-        monster.anchor.y = .5
-        monster.body.gravity.y = 400;
-        monster.body.collideWorldBounds = true;
-        monster.life = true;
+        rocker1 = enemies.create(600, 10, 'rocker');
+        rocker1.anchor.x = .5
+        rocker1.anchor.y = .5
+        rocker1.body.gravity.y = 400;
+        rocker1.body.collideWorldBounds = true;
+        rocker1.life = true;
+
+        rocker2 = enemies.create(300, 225, 'rocker');
+        rocker2.anchor.x = .5
+        rocker2.anchor.y = .5
+        rocker2.body.gravity.y = 400;
+        rocker2.body.collideWorldBounds = true;
+        rocker2.life = true;
         
         //add rocks
         rocks = game.add.group()
@@ -136,21 +143,28 @@ demo.state0.prototype = {
         fire();
     }
     
-    // monster throw rocks
-    if(monster.life == true){
-        if (game.time.now > nextRock){
-            nextRock = game.time.now + rockRate;
-            console.log('rocker');
-            rock = rocks.getFirstDead();
-            rock.reset(monster.x, monster.y - 20);
-            rock.body.gravity.y = 400;
-            rock.body.velocity.x = Math.random() * (400 - 200) + 200;
-            rock.body.velocity.y = Math.random() * -(200 - 50) - 50;
-
+    // rocker throw rocks
+    if(rocker1.life == true){
+        if (game.time.now > nextRock1){
+            nextRock1 = game.time.now + rockRate;
+            this.throw(rocker1);
         }
 
     }
-    
+    if(rocker2.life == true){
+        if (game.time.now > nextRock2){
+            nextRock2 = game.time.now + rockRate;
+            this.throw(rocker2);
+    }
+    }
+    },
+    throw: function(m){
+        console.log('rocker');
+        rock = rocks.getFirstDead();
+        rock.reset(m.x, m.y - 20);
+        rock.body.gravity.y = 400;
+        rock.body.velocity.x = Math.random() * (400 - 200) + 200;
+        rock.body.velocity.y = Math.random() * -(200 - 50) - 50;
     },
     hitWall: function(b){
         b.kill();
