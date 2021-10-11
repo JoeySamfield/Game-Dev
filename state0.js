@@ -1,4 +1,4 @@
-var demo = {}, centerX = 1000/2, centerY = 400/2, turn = true, nextFire = 0, fireRate = 200, bullet, land, platform;
+var demo = {}, centerX = 500/2, centerY = 200/2, turn = true, nextFire = 0, fireRate = 200, bullet, land, platform;
 demo.state0 = function(){};
 demo.state0.prototype = {
     preload: function(){
@@ -14,14 +14,14 @@ demo.state0.prototype = {
         game.add.sprite(0,0,"background")
 
         back_wall = game.add.sprite(0, 0, "back_wall"); // NEW CAVE BACKGROUND
-        back_wall.height = game.height;
-        back_wall.width = game.width;
+        back_wall.height = 400;
+        back_wall.width = 1000;
     
 
         // create land group
         land = game.add.group()
         game.physics.enable(land);
-        land.enableBody = true
+        land.enableBody = true;
 
         //create ground
         var bottom = land.create(0, 350, 'purple')
@@ -52,6 +52,12 @@ demo.state0.prototype = {
         //add controls
         cursors = game.input.keyboard.createCursorKeys()
 
+        //create game camera
+        game.world.setBounds(0, 0, 1000, 400);
+        game.camera.follow(char1);
+        game.camera.deadzone = new Phaser.Rectangle(centerX - 150, 75, 300, 50);
+        
+
         //add bullets
         bullets = game.add.group();
         bullets.enableBody = true;
@@ -70,7 +76,7 @@ demo.state0.prototype = {
         game.physics.arcade.overlap(bullets, land, this.hitWall)
     
 
-    if (cursors.up.isDown && stand)
+    if (game.input.keyboard.isDown(Phaser.Keyboard.W) && stand)
     {  
         if(char1.body.touching.down) {
             char1.body.velocity.y = -200;
@@ -81,13 +87,13 @@ demo.state0.prototype = {
         }
     
     }
-    if (cursors.left.isDown){
+    if (game.input.keyboard.isDown(Phaser.Keyboard.A)){
             char1.body.velocity.x = -200;
             char1.animations.play('walk', 20, true);
             char1.scale.setTo(-.25,.25)
             turn = false;
             }
-    else if (cursors.right.isDown){
+    else if (game.input.keyboard.isDown(Phaser.Keyboard.D)){
             char1.body.velocity.x = 200;
             char1.animations.play('walk', 20, true);
             char1.scale.setTo(.25,.25)
@@ -97,7 +103,7 @@ demo.state0.prototype = {
         char1.animations.stop('walk');
         char1.frame = 0;
     }      
-    if (game.input.activePointer.isDown){
+    if (game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)){
         fire();
     }
     
