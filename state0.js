@@ -1,4 +1,5 @@
-var demo = {}, centerX = 1000/2, centerY = 400/2, turn = true, nextFire = 0, fireRate = 200, bullet, land, platform, rockRate = 3000, nextRock = 0;
+
+var demo = {}, centerX = 500/2, centerY = 200/2, turn = true, nextFire = 0, fireRate = 200, bullet, land, platform, rockRate = 3000, nextRock = 0;
 demo.state0 = function(){};
 demo.state0.prototype = {
     preload: function(){
@@ -17,14 +18,14 @@ demo.state0.prototype = {
         game.add.sprite(0,0,"background")
 
         back_wall = game.add.sprite(0, 0, "back_wall"); // NEW CAVE BACKGROUND
-        back_wall.height = game.height;
-        back_wall.width = game.width;
+        back_wall.height = 400;
+        back_wall.width = 1000;
     
 
         // create land group
         land = game.add.group()
         game.physics.enable(land);
-        land.enableBody = true
+        land.enableBody = true;
 
         //create ground
         var bottom = land.create(0, 350, 'purple')
@@ -54,6 +55,12 @@ demo.state0.prototype = {
 
         //add controls
         cursors = game.input.keyboard.createCursorKeys()
+
+        //create game camera
+        game.world.setBounds(0, 0, 1000, 400);
+        game.camera.follow(char1);
+        game.camera.deadzone = new Phaser.Rectangle(centerX - 150, 75, 300, 50);
+        
 
         //add bullets
         bullets = game.add.group();
