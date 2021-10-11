@@ -1,4 +1,4 @@
-var demo = {}, centerX = 1000/2, centerY = 400/2, turn = true, nextFire = 0, fireRate = 500, bullet, land, platform, rockRate = 3000, nextRock1 = 0, nextRock2 = 0, nextRock3 = 0, nextRock4 = 0;
+var demo = {}, centerX = 1000/2, centerY = 400/2, turn = true, nextFire = 0, fireRate = 500, bullet, land, platform, charHP = 100, rockRate = 2000, nextRock1 = 0, nextRock2 = 0, nextRock3 = 0, nextRock4 = 0;
 demo.state0 = function(){};
 demo.state0.prototype = {
     preload: function(){
@@ -9,6 +9,8 @@ demo.state0.prototype = {
         game.load.image('bullet', 'pix/bullet.png');
         game.load.image('rocker', 'pix/enemy.png');
         game.load.image('rock', 'pix/rock.png');
+        game.load.image('blackSquare', 'pix/blackBack.jpg');
+        game.load.image('redSquare', 'pix/redBack.jfif');
 
     },
     create: function(){
@@ -40,6 +42,15 @@ demo.state0.prototype = {
             platform.width = platformList[i][3]
             platform.body.immovable = true
         }
+
+        //create health bar
+        blackHP = land.create(25,365, "blackSquare")
+        blackHP.height = 20
+        blackHP.width = 210
+        redHP = land.create(30,370, "redSquare")
+        redHP.height = 10
+        redHP.width = 200
+
         //create character 
         char1 = game.add.sprite(900,10, 'walk');
         char1.scale.setTo(.25,.25);
@@ -80,28 +91,28 @@ demo.state0.prototype = {
         rocker1.anchor.y = .5
         rocker1.body.gravity.y = 400;
         rocker1.body.collideWorldBounds = true;
-        rocker1.life = true;
+        rocker1.life = 2;
 
         rocker2 = enemies.create(300, 225, 'rocker');
         rocker2.anchor.x = .5
         rocker2.anchor.y = .5
         rocker2.body.gravity.y = 400;
         rocker2.body.collideWorldBounds = true;
-        rocker2.life = true;
+        rocker2.life = 2;
 
         rocker3 = enemies.create(50, 50, 'rocker');
         rocker3.anchor.x = .5
         rocker3.anchor.y = .5
         rocker3.body.gravity.y = 400;
         rocker3.body.collideWorldBounds = true;
-        rocker3.life = true;
+        rocker3.life = 2;
 
         rocker4 = enemies.create(650, 225, 'rocker');
         rocker4.anchor.x = .5
         rocker4.anchor.y = .5
         rocker4.body.gravity.y = 400;
         rocker4.body.collideWorldBounds = true;
-        rocker4.life = true;
+        rocker4.life = 2;
         
         //add rocks
         rocks = game.add.group()
@@ -158,26 +169,26 @@ demo.state0.prototype = {
     }
     
     // rocker throw rocks
-    if(rocker1.life == true){
+    if(rocker1.life > 0){
         if (game.time.now > nextRock1){
             nextRock1 = game.time.now + rockRate;
             this.throw(rocker1);
         }
 
     }
-    if(rocker2.life == true){
+    if(rocker2.life > 0){
         if (game.time.now > nextRock2){
             nextRock2 = game.time.now + rockRate;
             this.throw(rocker2);
     }
     }
-    if(rocker3.life == true){
+    if(rocker3.life > 0){
         if (game.time.now > nextRock3){
             nextRock3 = game.time.now + rockRate;
             this.throw(rocker3);
     }
     }
-    if(rocker4.life == true){
+    if(rocker4.life > 0){
         if (game.time.now > nextRock4){
             nextRock4 = game.time.now + rockRate;
             this.throw(rocker4);
@@ -197,14 +208,18 @@ demo.state0.prototype = {
     },
     hitPlayer: function(c, r){
         r.kill();
+        charHP = charHP - 20
+        redHP.width = charHP*2
     },
     rockLand: function(r, l){
         r.kill();
     },
     killEnemy: function(b, e){
         b.kill();
-        e.kill();
-        e.life = false;
+        e.life = e.life - 1;
+        if (e.life < 1) {
+            e.kill();
+        }
     }
 
 
