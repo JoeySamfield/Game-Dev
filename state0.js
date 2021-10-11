@@ -6,8 +6,8 @@ demo.state0.prototype = {
         game.load.image("back_wall", "pix/back-walls.png");
         game.load.image("purple", "pix/purple3.jpg");
         game.load.spritesheet('walk', "pix/walkRevolver.png", 128, 128);
+        game.load.spritesheet('rocker', "pix/rocker.png", 128, 128);
         game.load.image('bullet', 'pix/bullet.png');
-        game.load.image('rocker', 'pix/enemy.png');
         game.load.image('rock', 'pix/rock.png');
         game.load.image('blackSquare', 'pix/blackBack.jpg');
         game.load.image('redSquare', 'pix/redBack.jfif');
@@ -87,32 +87,40 @@ demo.state0.prototype = {
         game.physics.arcade.enable(enemies);
 
         rocker1 = enemies.create(350, 70, 'rocker');
+        rocker1.scale.setTo(.40,.40)
         rocker1.anchor.x = .5
         rocker1.anchor.y = .5
         rocker1.body.gravity.y = 400;
         rocker1.body.collideWorldBounds = true;
         rocker1.life = 2;
+        //rocker1.animations.add("throw",[0, 1, 2, 3, 4, 5,6,7,8])
 
         rocker2 = enemies.create(300, 225, 'rocker');
+        rocker2.scale.setTo(.40,.40)
         rocker2.anchor.x = .5
         rocker2.anchor.y = .5
         rocker2.body.gravity.y = 400;
         rocker2.body.collideWorldBounds = true;
         rocker2.life = 2;
+        //rocker2.animation.add("throw",[0, 1, 2, 3, 4, 5,6,7,8])
 
         rocker3 = enemies.create(50, 50, 'rocker');
+        rocker3.scale.setTo(.40,.40)
         rocker3.anchor.x = .5
         rocker3.anchor.y = .5
         rocker3.body.gravity.y = 400;
         rocker3.body.collideWorldBounds = true;
         rocker3.life = 2;
+        //rocker3.animation.add("throw",[0, 1, 2, 3, 4, 5,6,7,8])
 
         rocker4 = enemies.create(650, 225, 'rocker');
+        rocker4.scale.setTo(.40,.40)
         rocker4.anchor.x = .5
         rocker4.anchor.y = .5
         rocker4.body.gravity.y = 400;
         rocker4.body.collideWorldBounds = true;
         rocker4.life = 2;
+        //rocker4.animation.add("throw",[0, 1, 2, 3, 4, 5,6,7,8])
         
         //add rocks
         rocks = game.add.group()
@@ -156,7 +164,7 @@ demo.state0.prototype = {
             }
     else if (game.input.keyboard.isDown(Phaser.Keyboard.D)){
             char1.body.velocity.x = 200;
-            char1.animations.play('walk', 20, true);
+            char1.animations.play('walk', 2, true);
             char1.scale.setTo(.25,.25)
             turn = true;
             }
@@ -172,6 +180,7 @@ demo.state0.prototype = {
     if(rocker1.life > 0){
         if (game.time.now > nextRock1){
             nextRock1 = game.time.now + rockRate;
+            //rocker1.animations.play("throw",8,false)
             this.throw(rocker1);
         }
 
