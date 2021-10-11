@@ -1,4 +1,3 @@
-
 var demo = {}, centerX = 1000/2, centerY = 400/2, turn = true, nextFire = 0, fireRate = 200, bullet, land, platform, rockRate = 3000, nextRock = 0;
 demo.state0 = function(){};
 demo.state0.prototype = {
