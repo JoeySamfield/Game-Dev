@@ -1,5 +1,4 @@
-
-var demo = {}, centerX = 600/2, centerY = 300/2, turn = true, nextFire = 0, fireRate = 500, bullet, land, platform, charHP = 100, rockRate = 2000, nextRock1 = 0, nextRock2 = 0, nextRock3 = 0, nextRock4 = 0;
+var demo = {}, centerX = 600/2, centerY = 300/2, turn = true, nextFire = 0, fireRate = 500, char1, bullet, land, platform, chest, charHP = 100, rockRate = 2000, nextRock1 = 0, nextRock2 = 0, nextRock3 = 0, nextRock4 = 0, enviro;
 
 demo.state0 = function(){};
 demo.state0.prototype = {
@@ -12,10 +11,13 @@ demo.state0.prototype = {
         game.load.spritesheet('walk', "pix/walkRevolver.png", 128, 128);
         game.load.spritesheet('rocker', "pix/rocker.png", 128, 128);
         game.load.spritesheet('rocker_backwards', "pix/rocker.png", 128, 128);
+        game.load.spritesheet('water_drip', 'pix/water_drip.png', 32, 96);
         game.load.image('bullet', 'pix/bullet.png');
         game.load.image('rock', 'pix/thrown_rock.png');
         game.load.image('blackSquare', 'pix/blackBack.jpg');
         game.load.image('redSquare', 'pix/redBack.jfif');
+        game.load.image('chestClosed', 'pix/chest_closed.png');
+        game.load.image('chestOpen', 'pix/chest_open.png')
 
     },
     create: function(){
@@ -85,8 +87,9 @@ demo.state0.prototype = {
         cursors = game.input.keyboard.createCursorKeys()
 
         //create game camera
-        game.world.setBounds(0, 0, 1000, 400);
+        game.world.setBounds(0, 0, 1024, 416);
         game.camera.follow(char1);
+
         //game.camera.deadzone = new Phaser.Rectangle(centerX - 150, 75, 300, 50);
         
 
@@ -97,6 +100,11 @@ demo.state0.prototype = {
         bullets.createMultiple(200, 'bullet');
         bullets.setAll('checkWorldBounds', true);
         bullets.setAll('outOfBoundsKill', true);
+
+        // add environmental elements
+        drip1 = game.add.sprite(950, 160, "water_drip");
+        drip1.animations.add("dripping", [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59]);
+        drip1.animations.play("dripping", 24, true);
 
         //add rockers
         enemies = game.add.group();
@@ -150,6 +158,18 @@ demo.state0.prototype = {
         rocks.createMultiple(200, 'rock');
         rocks.setAll('checkWorldBounds', true);
         rocks.setAll('outOfBoundsKill', true);
+
+        //add chest
+        chest = game.add.sprite(900, 245, 'chestClosed');//900, 245
+        chest.scale.setTo(.1, .1);
+        game.physics.arcade.enable(chest);
+        //chest.body.gravity.y = 400;
+        chest.body.collideWorldBounds = true;
+        chest.body.immovable = true;
+        chest.anchor.x = .5
+        chest.anchor.y = .5
+        
+        
     
         
 
@@ -164,6 +184,9 @@ demo.state0.prototype = {
         game.physics.arcade.overlap(rocks, char1, this.hitPlayer);
         game.physics.arcade.collide(rocks, cave_layer, this.rockLand); // land -> cave_layer // overlap -> collide
         game.physics.arcade.overlap(bullets, enemies, this.killEnemy);
+        game.physics.arcade.collide(chest, cave_layer);
+
+        var chestPlayer = game.physics.arcade.collide(char1, chest);
     
 
     if (game.input.keyboard.isDown(Phaser.Keyboard.W) && stand)
@@ -230,9 +253,15 @@ demo.state0.prototype = {
             this.throw(rocker4);
     }
     }
+    if(chestPlayer){
+        if (game.input.keyboard.isDown(Phaser.Keyboard.E)){
+            chest.loadTexture('chestOpen');
+            chest.reset(900, 243);
+        }
+    }
     },
     throw: function(m){
-        console.log('rocker');
+        //console.log('rocker');
         rock = rocks.getFirstDead();
         rock.reset(m.x, m.y - 20);
         rock.body.gravity.y = 400;
@@ -240,7 +269,7 @@ demo.state0.prototype = {
         rock.body.velocity.y = Math.random() * -(200 - 50) - 50;
     },
     hitWall: function(b){
-        console.log('Hit wall');
+        //console.log('Hit wall');
         b.kill();
     },
     hitPlayer: function(c, r){
@@ -257,7 +286,7 @@ demo.state0.prototype = {
         if (e.life < 1) {
             e.kill();
         }
-    }
+    },
 
 
 
@@ -265,11 +294,11 @@ demo.state0.prototype = {
     function fire(){
         if(game.time.now > nextFire) {
             nextFire = game.time.now + fireRate;
-            console.log('firing');
+            //console.log('firing');
             bullet = bullets.getFirstDead();
             bullet.reset(char1.x, char1.y);
             if (turn == true){
-                console.log(game.time.now)
+                //console.log(game.time.now)
                 bullet.reset(char1.x, char1.y+10);
                 bullet.scale.setTo(.5,.5);
                 bullet.body.velocity.x = 1000;
