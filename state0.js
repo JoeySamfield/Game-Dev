@@ -60,12 +60,14 @@ demo.state0.prototype = {
         
 
         //create health bar
-        blackHP = land.create(25,390, "blackSquare")
-        blackHP.height = 20
-        blackHP.width = 210
-        redHP = land.create(30,395, "redSquare")
+        blackHP = land.create(23,283, "blackSquare")
+        blackHP.height = 13
+        blackHP.width = 103
+        blackHP.fixedToCamera = true;
+        redHP = land.create(25,285, "redSquare")
         redHP.height = 10
-        redHP.width = 200
+        redHP.width = 100
+        redHP.fixedToCamera = true;
 
         //create character 
         char1 = game.add.sprite(900,10, 'walk');
@@ -244,7 +246,7 @@ demo.state0.prototype = {
     hitPlayer: function(c, r){
         r.kill();
         charHP = charHP - 20
-        redHP.width = charHP*2
+        redHP.width = charHP
     },
     rockLand: function(r, l){
         r.kill();
