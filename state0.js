@@ -1,5 +1,5 @@
 
-var demo = {}, centerX = 500/2, centerY = 200/2, turn = true, nextFire = 0, fireRate = 500, bullet, land, platform, charHP = 100, rockRate = 2000, nextRock1 = 0, nextRock2 = 0, nextRock3 = 0, nextRock4 = 0;
+var demo = {}, centerX = 600/2, centerY = 300/2, turn = true, nextFire = 0, fireRate = 500, bullet, land, platform, charHP = 100, rockRate = 2000, nextRock1 = 0, nextRock2 = 0, nextRock3 = 0, nextRock4 = 0;
 
 demo.state0 = function(){};
 demo.state0.prototype = {
@@ -85,7 +85,7 @@ demo.state0.prototype = {
         //create game camera
         game.world.setBounds(0, 0, 1000, 400);
         game.camera.follow(char1);
-        game.camera.deadzone = new Phaser.Rectangle(centerX - 150, 75, 300, 50);
+        //game.camera.deadzone = new Phaser.Rectangle(centerX - 150, 75, 300, 50);
         
 
         //add bullets
