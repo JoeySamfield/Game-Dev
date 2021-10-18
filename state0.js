@@ -1,4 +1,5 @@
-var demo = {}, centerX = 1024/2, centerY = 416/2, turn = true, nextFire = 0, fireRate = 1000, bullet, arrow, land, charWeapon = "Bow", platform, charHP = 100, rockRate = 2000, rollerRate = 3000, nextRock1 = 0, nextRock2 = 0, nextRock3 = 0, nextRock4 = 0, enviro;
+var demo = {}, centerX = 1024/2, centerY = 416/2, turn = true, nextFire = 0, fireRate = 1000, charWeapon = "Bow", char1, bullet, arrow, land, platform, chest, charHP = 100, rockRate = 2000, rollerRate = 3000, nextRock1 = 0, nextRock2 = 0, nextRock3 = 0, nextRock4 = 0, enviro;
+
 demo.state0 = function(){};
 demo.state0.prototype = {
     preload: function(){
@@ -19,6 +20,8 @@ demo.state0.prototype = {
         game.load.image('rolledStone', 'pix/blueFire.png');
         game.load.image('blackSquare', 'pix/blackBack.jpg');
         game.load.image('redSquare', 'pix/redBack.jfif');
+        game.load.image('chestClosed', 'pix/chest_closed.png');
+        game.load.image('chestOpen', 'pix/chest_open.png')
 
     },
     create: function(){
@@ -173,9 +176,16 @@ demo.state0.prototype = {
         fireball.createMultiple(200, 'rolledStone');
         fireball.setAll('checkWorldBounds', true);
         fireball.setAll('outOfBoundsKill', true);
-        
-    
-        
+
+        //add chest
+        chest = game.add.sprite(900, 245, 'chestClosed');//900, 245
+        chest.scale.setTo(.1, .1);
+        game.physics.arcade.enable(chest);
+        //chest.body.gravity.y = 400;
+        chest.body.collideWorldBounds = true;
+        chest.body.immovable = true;
+        chest.anchor.x = .5
+        chest.anchor.y = .5
 
     },
     update: function(){
@@ -192,7 +202,8 @@ demo.state0.prototype = {
         game.physics.arcade.collide(rocks, cave_layer, this.rockLand); // land -> cave_layer // overlap -> collide
         game.physics.arcade.overlap(bullets, enemies, this.killEnemy);
         game.physics.arcade.overlap(arrows, enemies, this.killEnemy);
-    
+        game.physics.arcade.collide(chest, cave_layer);
+        var chestPlayer = game.physics.arcade.collide(char1, chest);
 
     if (game.input.keyboard.isDown(Phaser.Keyboard.W) && stand)
     {  
@@ -260,9 +271,15 @@ demo.state0.prototype = {
             this.throw(rocker4);
     }
     }
+    if(chestPlayer){
+        if (game.input.keyboard.isDown(Phaser.Keyboard.E)){
+            chest.loadTexture('chestOpen');
+            chest.reset(900, 243);
+        }
+    }
     },
     throw: function(m){
-        console.log('rocker');
+        //console.log('rocker');
         rock = rocks.getFirstDead();
         rock.reset(m.x, m.y - 20);
         rock.body.gravity.y = 400;
@@ -280,7 +297,7 @@ demo.state0.prototype = {
         fball.body.bounce.set(.85)
     },
     hitWall: function(b){
-        console.log('Hit wall');
+        //console.log('Hit wall');
         b.kill();
     },
     hitPlayer: function(c, r){
@@ -297,7 +314,7 @@ demo.state0.prototype = {
         if (e.life < 1) {
             e.kill();
         }
-    }
+    },
 
 
 
@@ -305,11 +322,11 @@ demo.state0.prototype = {
     function fire(){
         if(game.time.now > nextFire) {
             nextFire = game.time.now + fireRate;
-            console.log('firing');
+            //console.log('firing');
             bullet = bullets.getFirstDead();
             bullet.reset(char1.x, char1.y);
             if (turn == true){
-                console.log(game.time.now)
+                //console.log(game.time.now)
                 bullet.reset(char1.x, char1.y+10);
                 bullet.scale.setTo(.5,.5);
                 bullet.body.velocity.x = 1000;
