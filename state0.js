@@ -202,7 +202,7 @@ demo.state0.prototype = {
         rocks.setAll('checkWorldBounds', true);
         rocks.setAll('outOfBoundsKill', true);
 
-        //add roller
+        //add blue fire
         fireball = game.add.group()
         fireball.enableBody = true;
         fireball.physicsBodyType = Phaser.Physics.ARCADE;
@@ -328,6 +328,7 @@ demo.state0.prototype = {
         fball.body.velocity.x = 130;
         fball.body.velocity.y = -100;
         fball.body.bounce.set(.85)
+        fball.lifespan = (10000)
     },
     hitWall: function(b){
         //console.log('Hit wall');
