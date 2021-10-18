@@ -12,7 +12,7 @@ demo.state0.prototype = {
         game.load.image("vines_w_light_green", "pix/vines_w_light_green.png"); // vines tile
         game.load.image("x_sign", "pix/x_sign.png"); // X sign tile
         //game.load.image("purple", "pix/purple3.jpg");
-        //game.load.spritesheet('walk', "pix/walkRevolver.png", 128, 128);
+        game.load.spritesheet('walk_gun', "pix/walkRevolver.png", 128, 128);
         game.load.spritesheet('walk', "pix/walkBowArrow.png", 128, 128);
         game.load.spritesheet('rocker', "pix/rocker.png", 128, 128);
         game.load.spritesheet('rocker_backwards', "pix/rocker.png", 128, 128);
@@ -155,17 +155,8 @@ demo.state0.prototype = {
         game.physics.arcade.enable(enemies);
 
 
-        rocker0 = enemies.create(60, 350, 'rocker');
 
-        rocker0.anchor.x = .5
-        rocker0.anchor.y = .5
-        rocker0.body.gravity.y = 400;
-        rocker0.body.collideWorldBounds = true;
-        rocker0.life = 2;
-        rocker0.animations.add("rocker",[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3, 4, 5]); // added zeros for better pace
-        rocker0.animations.add("rocker_backwards", [5, 4, 3, 2, 1, 0]);
-        
-        rocker1 = enemies.create(30, 160, 'wizard');
+        rocker1 = enemies.create(310, 350, 'wizard');
         rocker1.scale.setTo(.40, .40)
 
         rocker1.anchor.x = .5
@@ -220,7 +211,7 @@ demo.state0.prototype = {
         fireball.setAll('outOfBoundsKill', true);
 
         //add chest
-        chest = game.add.sprite(900, 245, 'chestClosed');//900, 245
+        chest = game.add.sprite(870, 277, 'chestClosed');//900, 245
         chest.scale.setTo(.1, .1);
         game.physics.arcade.enable(chest);
         //chest.body.gravity.y = 400;
