@@ -1,4 +1,6 @@
-var demo = {}, centerX = 2048/2, centerY = 416/2, turn = true, nextFire = 0, arrowRate = 1000, revolverRate = 500, charWeapon = "Bow", char1, bullet, arrow, land, platform, chest, charHP = 100, rockRate = 2000, rollerRate = 3000, nextOrb2 = 0, nextRock1 = 0, nextRock2 = 0, nextRock3 = 0, nextRock4 = 0, enviro;
+
+var demo = {}, centerX = 600/2, centerY = 300/2, turn = true, nextFire = 0, fireRate = 500, char1, bullet, land, platform, chest, charHP = 100, rockRate = 2000, nextRock1 = 0, nextRock2 = 0, nextRock3 = 0, nextRock4 = 0, enviro;
+
 
 demo.state0 = function(){};
 demo.state0.prototype = {
@@ -82,12 +84,14 @@ demo.state0.prototype = {
         
 
         //create health bar
-        blackHP = land.create(25,390, "blackSquare")
-        blackHP.height = 20
-        blackHP.width = 210
-        redHP = land.create(30,395, "redSquare")
+        blackHP = land.create(23,283, "blackSquare")
+        blackHP.height = 13
+        blackHP.width = 103
+        blackHP.fixedToCamera = true;
+        redHP = land.create(25,285, "redSquare")
         redHP.height = 10
-        redHP.width = 200
+        redHP.width = 100
+        redHP.fixedToCamera = true;
 
         //create character 
         char1 = game.add.sprite(50,50, 'walk'); 
@@ -105,8 +109,9 @@ demo.state0.prototype = {
         cursors = game.input.keyboard.createCursorKeys()
 
         //create game camera
-        //game.world.setBounds(0, 0, 1024, 416);
-        //game.camera.follow(char1);
+        game.world.setBounds(0, 0, 1024, 416);
+        game.camera.follow(char1);
+
         //game.camera.deadzone = new Phaser.Rectangle(centerX - 150, 75, 300, 50);
         
 
@@ -369,10 +374,11 @@ demo.state0.prototype = {
     hitPlayer: function(c, r){
         r.kill();
         charHP = charHP - 20
-        redHP.width = charHP*2
+        redHP.width = charHP
         if (charHP == 0) {
             char1.kill()
         }
+
     },
     rockLand: function(r, l){
         r.kill();
