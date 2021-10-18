@@ -1,4 +1,4 @@
-var demo = {}, centerX = 1024/2, centerY = 416/2, turn = true, nextFire = 0, fireRate = 500, bullet, land, platform, charHP = 100, rockRate = 2000, nextRock1 = 0, nextRock2 = 0, nextRock3 = 0, nextRock4 = 0, enviro;
+var demo = {}, centerX = 1024/2, centerY = 416/2, turn = true, nextFire = 0, fireRate = 1000, bullet, arrow, land, charWeapon = "Bow", platform, charHP = 100, rockRate = 2000, rollerRate = 3000, nextRock1 = 0, nextRock2 = 0, nextRock3 = 0, nextRock4 = 0, enviro;
 demo.state0 = function(){};
 demo.state0.prototype = {
     preload: function(){
@@ -7,12 +7,16 @@ demo.state0.prototype = {
         game.load.tilemap("cave_map", "pix/cave_map_test4.json", null, Phaser.Tilemap.TILED_JSON);
         game.load.image("Cave", "pix/cave_tiles_png.png");
         game.load.image("purple", "pix/purple3.jpg");
-        game.load.spritesheet('walk', "pix/walkRevolver.png", 128, 128);
+        game.load.spritesheet('walk', "pix/walkBowArrow.png", 128, 128);
+        //game.load.spritesheet('walk', "pix/walkRevolver.png", 128, 128);
         game.load.spritesheet('rocker', "pix/rocker.png", 128, 128);
         game.load.spritesheet('rocker_backwards', "pix/rocker.png", 128, 128);
         game.load.spritesheet('water_drip', 'pix/water_drip.png', 32, 96);
+        game.load.spritesheet('wizard', "pix/redWizard.png", 128, 128);
+        game.load.image('anArrow', 'pix/arrow.png');
         game.load.image('bullet', 'pix/bullet.png');
         game.load.image('rock', 'pix/thrown_rock.png');
+        game.load.image('rolledStone', 'pix/blueFire.png');
         game.load.image('blackSquare', 'pix/blackBack.jpg');
         game.load.image('redSquare', 'pix/redBack.jfif');
 
@@ -95,6 +99,15 @@ demo.state0.prototype = {
         bullets.setAll('checkWorldBounds', true);
         bullets.setAll('outOfBoundsKill', true);
 
+        //add bullets
+        arrows = game.add.group();
+        arrows.enableBody = true;
+        arrows.physicsBodyType = Phaser.Physics.ARCADE;
+        arrows.createMultiple(200, 'anArrow');
+        arrows.setAll('checkWorldBounds', true);
+        arrows.setAll('outOfBoundsKill', true);
+        
+
         // add environmental elements
         drip1 = game.add.sprite(950, 160, "water_drip");
         drip1.animations.add("dripping", [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59]);
@@ -107,7 +120,7 @@ demo.state0.prototype = {
         game.physics.arcade.enable(enemies);
 
 
-        rocker1 = enemies.create(130, 150, 'rocker');
+        rocker1 = enemies.create(30, 160, 'wizard');
         rocker1.scale.setTo(.40, .40)
 
         rocker1.anchor.x = .5
@@ -152,6 +165,15 @@ demo.state0.prototype = {
         rocks.createMultiple(200, 'rock');
         rocks.setAll('checkWorldBounds', true);
         rocks.setAll('outOfBoundsKill', true);
+
+        //add roller
+        fireball = game.add.group()
+        fireball.enableBody = true;
+        fireball.physicsBodyType = Phaser.Physics.ARCADE;
+        fireball.createMultiple(200, 'rolledStone');
+        fireball.setAll('checkWorldBounds', true);
+        fireball.setAll('outOfBoundsKill', true);
+        
     
         
 
@@ -160,12 +182,16 @@ demo.state0.prototype = {
 
         var stand = game.physics.arcade.collide(char1, cave_layer); // land -> cave_layer
         var enemystand = game.physics.arcade.collide(enemies, cave_layer); // land -> cave_layer
+        var fireballStand = game.physics.arcade.collide(fireball, cave_layer); // land -> cave_layer
         char1.body.velocity.x = 0;
         //check for overlap between bullets and walls, call function to kill bullet sprite
         game.physics.arcade.collide(bullets, cave_layer, this.hitWall); // land -> cave_layer // overlap -> collide
+        game.physics.arcade.collide(arrows, cave_layer, this.hitWall);
         game.physics.arcade.overlap(rocks, char1, this.hitPlayer);
+        game.physics.arcade.overlap(fireball, char1, this.hitPlayer);
         game.physics.arcade.collide(rocks, cave_layer, this.rockLand); // land -> cave_layer // overlap -> collide
         game.physics.arcade.overlap(bullets, enemies, this.killEnemy);
+        game.physics.arcade.overlap(arrows, enemies, this.killEnemy);
     
 
     if (game.input.keyboard.isDown(Phaser.Keyboard.W) && stand)
@@ -196,18 +222,20 @@ demo.state0.prototype = {
         char1.frame = 0;
     }      
     if (game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)){
-        fire();
+        if (charWeapon == "Bow") {
+            shootBow()
+        } else {
+            fire();
+        }
     }
     
     // rocker throw rocks
     if(rocker1.life > 0){
         if (game.time.now > nextRock1){
-            nextRock1 = game.time.now + rockRate;
+            nextRock1 = game.time.now + rollerRate;
             rocker1.animations.play("rocker",10,false);
-            this.throw(rocker1);
-            //rocker1.animations.stop("rocker");
-            //rocker1.animations.play("rocker_backwards", 8, false);
-            //rocker1.animations.stop("rocker");
+            this.roll(rocker1);
+
         }
 
     }
@@ -240,6 +268,16 @@ demo.state0.prototype = {
         rock.body.gravity.y = 400;
         rock.body.velocity.x = Math.random() * (400 - 200) + 200;
         rock.body.velocity.y = Math.random() * -(200 - 50) - 50;
+    },
+    roll: function(m){
+        console.log('rocker');
+        fball = fireball.getFirstDead();
+        fball.reset(m.x+7, m.y - 30);
+        fball.scale.setTo(.1,.1)
+        fball.body.gravity.y = 900;
+        fball.body.velocity.x = 130;
+        fball.body.velocity.y = -100;
+        fball.body.bounce.set(.85)
     },
     hitWall: function(b){
         console.log('Hit wall');
@@ -285,4 +323,31 @@ demo.state0.prototype = {
     
 
         }
-    }   
+    } 
+
+    function shootBow(){
+        if(game.time.now > nextFire) {
+            nextFire = game.time.now + fireRate;
+            console.log('firing');
+            arrow = arrows.getFirstDead();
+            arrow.reset(char1.x, char1.y);
+            arrow.body.gravity.y = 200;
+            if (turn == true){
+                console.log(game.time.now)
+                arrow.reset(char1.x, char1.y+10);
+                arrow.scale.setTo(.2,.2);
+                arrow.body.velocity.x = 400;
+                arrow.body.velocity.y = -60;
+
+            }
+            else{
+                console.log(game.time.now)
+                arrow.reset(char1.x, char1.y+10);
+                arrow.scale.setTo(-.2,.2);
+                arrow.body.velocity.x = -400;
+                arrow.body.velocity.y = -60;
+            }
+    
+
+        }
+    }  
