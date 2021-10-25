@@ -1,4 +1,4 @@
-var demo = {}, centerX = 2048/2, centerY = 416/2, turn = true, nextFire = 0, arrowRate = 1000, revolverRate = 500, charWeapon = "Bow", char1, bullet, arrow, land, platform, chest, charHP = 100, rockRate = 2000, rollerRate = 3000, nextOrb2 = 0, nextRock1 = 0, nextRock2 = 0, nextRock3 = 0, nextRock4 = 0, enviro;
+var demo = {}, centerX = 600/2, centerY = 300/2, turn = true, nextFire = 0, arrowRate = 1000, revolverRate = 500, charWeapon = "Bow", char1, bullet, arrow, land, platform, chest, charHP = 100, rockRate = 2000, rollerRate = 3000, nextOrb2 = 0, nextRock1 = 0, nextRock2 = 0, nextRock3 = 0, nextRock4 = 0, enviro;
 
 demo.state0 = function(){};
 demo.state0.prototype = {
@@ -82,12 +82,14 @@ demo.state0.prototype = {
         
 
         //create health bar
-        blackHP = land.create(25,390, "blackSquare")
-        blackHP.height = 20
-        blackHP.width = 210
-        redHP = land.create(30,395, "redSquare")
-        redHP.height = 10
+        blackHP = land.create(25,275, "blackSquare")
+        blackHP.height = 15
+        blackHP.width = 205
+        redHP = land.create(27,278, "redSquare")
+        redHP.height = 9
         redHP.width = 200
+        blackHP.fixedToCamera = true;
+        redHP.fixedToCamera = true;
 
         // create sword (placeholder, kind of)
         chipped_blade = game.add.sprite(50, 50, 'chipped_blade');
@@ -108,8 +110,8 @@ demo.state0.prototype = {
         cursors = game.input.keyboard.createCursorKeys()
 
         //create game camera
-        //game.world.setBounds(0, 0, 1024, 416);
-        //game.camera.follow(char1);
+        game.world.setBounds(0, 0, 2048, 416);
+        game.camera.follow(char1);
         //game.camera.deadzone = new Phaser.Rectangle(centerX - 150, 75, 300, 50);
         
 
@@ -380,7 +382,7 @@ demo.state0.prototype = {
         charHP = charHP - 20
         redHP.width = charHP*2
         if (charHP == 0) {
-            char1.kill()
+            //char1.kill()
         }
     },
     rockLand: function(r, l){
