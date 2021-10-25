@@ -382,7 +382,7 @@ demo.state0.prototype = {
         charHP = charHP - 20
         redHP.width = charHP*2
         if (charHP == 0) {
-            //char1.kill()
+            char1.kill()
         }
     },
     rockLand: function(r, l){
