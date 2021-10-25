@@ -12,6 +12,7 @@ demo.state0.prototype = {
         game.load.image("vines_w_light_green", "pix/vines_w_light_green.png"); // vines tile
         game.load.image("x_sign", "pix/x_sign.png"); // X sign tile
         //game.load.image("purple", "pix/purple3.jpg");
+        game.load.image("chipped_blade", "pix/chipped_blade.png");
         game.load.spritesheet('walk_rev', "pix/walkRevolver.png", 128, 128);
         game.load.spritesheet('walk', "pix/walkBowArrow.png", 128, 128);
         game.load.spritesheet('rocker', "pix/rocker.png", 128, 128);
@@ -87,6 +88,9 @@ demo.state0.prototype = {
         redHP = land.create(30,395, "redSquare")
         redHP.height = 10
         redHP.width = 200
+
+        // create sword (placeholder, kind of)
+        chipped_blade = game.add.sprite(50, 50, 'chipped_blade');
 
         //create character 
         char1 = game.add.sprite(50,50, 'walk'); 
@@ -247,11 +251,15 @@ demo.state0.prototype = {
         game.physics.arcade.collide(chest, cave_layer);
         var chestPlayer = game.physics.arcade.collide(char1, chest);
 
+        // ALIGN sword to player
+        chipped_blade.alignTo(char1, Phaser.TOP_CENTER, 0, -30);
+
     if (game.input.keyboard.isDown(Phaser.Keyboard.W) && stand)
     {  
         if(char1.body.blocked.down) {   // touching -> blocked
             char1.body.velocity.y = -200;
-        } else if(char1.body.touching.up) {
+        } else if(char1.body.blocked.up) { // if you hit your head, start falling down.
+                                           // (touching -> blocked  --- FIXED head climbing)
             char1.body.velocity.y = 10
         } else {
             char1.body.velocity.y = -75
@@ -281,6 +289,8 @@ demo.state0.prototype = {
             fire();
         }
     }
+
+    
     
     // rocker throw rocks
     if(rWizard1.life > 0){
