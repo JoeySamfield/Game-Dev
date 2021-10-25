@@ -1,4 +1,5 @@
 var demo = {}, centerX = 600/2, centerY = 300/2, turn = true, nextFire = 0, arrowRate = 1000, revolverRate = 500, charWeapon = "Bow", char1, bullet, arrow, land, platform, chest, charHP = 100, rockRate = 2000, rollerRate = 3000, nextOrb2 = 0, nextRock1 = 0, nextRock2 = 0, nextRock3 = 0, nextRock4 = 0, enviro;
+var demo = {}, centerX = 600/2, centerY = 300/2, turn = true, nextFire = 0, arrowRate = 1000, revolverRate = 500, charWeapon = "Bow", char1, bullet, arrow, land, platform, chest, charHP = 100, rockRate = 2000, rollerRate = 3000, nextOrb2 = 0, nextRock1 = 0, nextRock2 = 0, nextRock3 = 0, nextRock4 = 0, last_dir;
 
 demo.state0 = function(){};
 demo.state0.prototype = {
@@ -27,7 +28,10 @@ demo.state0.prototype = {
         game.load.image('blackSquare', 'pix/blackBack.jpg');
         game.load.image('redSquare', 'pix/redBack.jfif');
         game.load.image('chestClosed', 'pix/chest_closed.png');
-        game.load.image('chestOpen', 'pix/chest_open.png')
+        game.load.image('chestOpen', 'pix/chest_open.png');
+        //game.load.image('empty_sprite', 'pix/empty_sprite.png');
+        game.load.spritesheet('slash_L_2', 'pix/slash_L_2.png', 32, 32);
+        game.load.spritesheet('slash_R_2', 'pix/slash_R_2.png', 32, 32);
 
     },
     create: function(){
@@ -90,6 +94,20 @@ demo.state0.prototype = {
         redHP.width = 200
         blackHP.fixedToCamera = true;
         redHP.fixedToCamera = true;
+
+        // create slash/hurtbox
+        slash_L_2 = game.add.sprite(50, 50, 'slash_L_2');
+        slash_L_2.animations.add('slash_L_2', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]);
+        slash_L_2.frame = 0;
+        game.physics.arcade.enable(slash_L_2);
+        
+
+        slash_R_2 = game.add.sprite(50, 50, 'slash_R_2');
+        slash_R_2.animations.add('slash_R_2', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]);
+        slash_R_2.frame = 0;
+        game.physics.arcade.enable(slash_R_2);
+        //empty_sprite_L = game.add.sprite(50, 50, 'empty_sprite');
+        //empty_sprite_R = game.add.sprite(50, 50, 'empty_sprite');
 
         // create sword (placeholder, kind of)
         chipped_blade = game.add.sprite(50, 50, 'chipped_blade');
@@ -250,10 +268,17 @@ demo.state0.prototype = {
         game.physics.arcade.collide(rocks, cave_layer, this.rockLand); // land -> cave_layer // overlap -> collide
         game.physics.arcade.overlap(bullets, enemies, this.killEnemy);
         game.physics.arcade.overlap(arrows, enemies, this.killEnemy);
+        game.physics.arcade.overlap(slash_L_2, enemies, this.meleeEnemyL); // MELEE
+        game.physics.arcade.overlap(slash_R_2, enemies, this.meleeEnemyR);
         game.physics.arcade.collide(chest, cave_layer);
         var chestPlayer = game.physics.arcade.collide(char1, chest);
 
         // ALIGN sword to player
+        // ALIGN slash/hurtboxes to player sides
+        slash_L_2.alignTo(char1, Phaser.TOP_CENTER, -15, -35);
+        slash_R_2.alignTo(char1, Phaser.TOP_CENTER, 15, -35);
+
+        // ALIGN sword to player back
         chipped_blade.alignTo(char1, Phaser.TOP_CENTER, 0, -30);
 
     if (game.input.keyboard.isDown(Phaser.Keyboard.W) && stand)
@@ -273,12 +298,14 @@ demo.state0.prototype = {
             char1.animations.play('walk', 20, true);
             char1.scale.setTo(-.25,.25)
             turn = false;
+            last_dir = 'left'
             }
     else if (game.input.keyboard.isDown(Phaser.Keyboard.D)){
             char1.body.velocity.x = 200;
             char1.animations.play('walk', 20, true);
             char1.scale.setTo(.25,.25)
             turn = true;
+            last_dir = 'right'
             }
     else{
         char1.animations.stop('walk');
@@ -290,6 +317,9 @@ demo.state0.prototype = {
         } else {
             fire();
         }
+    }
+    if (game.input.keyboard.isDown(Phaser.Keyboard.F)){
+        animateMelee();
     }
 
     
@@ -395,6 +425,26 @@ demo.state0.prototype = {
             e.kill();
         }
     },
+    meleeEnemyL: function(s, e){
+        if (game.input.keyboard.isDown(Phaser.Keyboard.F)){
+            if (s.frame == 2) {
+                e.life = e.life - 1;
+                if (e.life < 1) {
+                    e.kill();
+                }
+            }
+        }
+    },
+    meleeEnemyR: function(s, e){
+        if (game.input.keyboard.isDown(Phaser.Keyboard.F)){
+            if (s.frame == 2) {
+                e.life = e.life - 1;
+                if (e.life < 1) {
+                    e.kill();
+                }
+            }
+        }
+    }
 
 
 
@@ -447,4 +497,13 @@ demo.state0.prototype = {
     
 
         }
-    }  
+    }      }
+    function animateMelee(){
+        if (last_dir == 'left') {
+            slash_L_2.animations.play('slash_L_2', 30, false);
+        }
+        else if (last_dir == 'right') {
+            slash_R_2.animations.play('slash_R_2', 30, false);
+        }
+    }
+
