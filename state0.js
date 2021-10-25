@@ -1,4 +1,3 @@
-var demo = {}, centerX = 600/2, centerY = 300/2, turn = true, nextFire = 0, arrowRate = 1000, revolverRate = 500, charWeapon = "Bow", char1, bullet, arrow, land, platform, chest, charHP = 100, rockRate = 2000, rollerRate = 3000, nextOrb2 = 0, nextRock1 = 0, nextRock2 = 0, nextRock3 = 0, nextRock4 = 0, enviro;
 var demo = {}, centerX = 600/2, centerY = 300/2, turn = true, nextFire = 0, arrowRate = 1000, revolverRate = 500, charWeapon = "Bow", char1, bullet, arrow, land, platform, chest, charHP = 100, rockRate = 2000, rollerRate = 3000, nextOrb2 = 0, nextRock1 = 0, nextRock2 = 0, nextRock3 = 0, nextRock4 = 0, last_dir;
 
 demo.state0 = function(){};
@@ -273,7 +272,6 @@ demo.state0.prototype = {
         game.physics.arcade.collide(chest, cave_layer);
         var chestPlayer = game.physics.arcade.collide(char1, chest);
 
-        // ALIGN sword to player
         // ALIGN slash/hurtboxes to player sides
         slash_L_2.alignTo(char1, Phaser.TOP_CENTER, -15, -35);
         slash_R_2.alignTo(char1, Phaser.TOP_CENTER, 15, -35);
@@ -497,7 +495,7 @@ demo.state0.prototype = {
     
 
         }
-    }      }
+    }
     function animateMelee(){
         if (last_dir == 'left') {
             slash_L_2.animations.play('slash_L_2', 30, false);
