@@ -14,7 +14,8 @@ demo.state0.prototype = {
         //game.load.image("purple", "pix/purple3.jpg");
         game.load.image("chipped_blade", "pix/chipped_blade.png");
         game.load.spritesheet('walk_rev', "pix/walkRevolver.png", 128, 128);
-        game.load.spritesheet('walk', "pix/walkBowArrow.png", 128, 128);
+        //game.load.spritesheet('walk', "pix/walkBowArrow.png", 128, 128);
+        game.load.spritesheet('walk', "pix/RevolverPlusClumb.png", 128, 128);
         game.load.spritesheet('rocker', "pix/rocker.png", 128, 128);
         game.load.spritesheet('rocker_backwards', "pix/rocker.png", 128, 128);
         game.load.spritesheet('water_drip', 'pix/water_drip.png', 32, 96);
@@ -98,6 +99,7 @@ demo.state0.prototype = {
         char1.frame = 0;
         char1.anchor.x = .5
         char1.animations.add('walk', [0, 1, 2, 3, 4, 5,6,7,8,9,10,11,12,13,14,15]);
+        char1.animations.add('climb', [17, 18, 19, 20, 21])
 
         //add gravity and physics
         game.physics.arcade.enable(char1);
@@ -254,18 +256,7 @@ demo.state0.prototype = {
         // ALIGN sword to player
         chipped_blade.alignTo(char1, Phaser.TOP_CENTER, 0, -30);
 
-    if (game.input.keyboard.isDown(Phaser.Keyboard.W) && stand)
-    {  
-        if(char1.body.blocked.down) {   // touching -> blocked
-            char1.body.velocity.y = -200;
-        } else if(char1.body.blocked.up) { // if you hit your head, start falling down.
-                                           // (touching -> blocked  --- FIXED head climbing)
-            char1.body.velocity.y = 10
-        } else {
-            char1.body.velocity.y = -75
-        }
-    
-    }
+
     if (game.input.keyboard.isDown(Phaser.Keyboard.A)){
             char1.body.velocity.x = -200;
             char1.animations.play('walk', 20, true);
@@ -274,7 +265,7 @@ demo.state0.prototype = {
             }
     else if (game.input.keyboard.isDown(Phaser.Keyboard.D)){
             char1.body.velocity.x = 200;
-            char1.animations.play('walk', 20, true);
+            char1.animations.play('walk', 5, true);
             char1.scale.setTo(.25,.25)
             turn = true;
             }
@@ -289,7 +280,19 @@ demo.state0.prototype = {
             fire();
         }
     }
-
+    if (game.input.keyboard.isDown(Phaser.Keyboard.W) && stand)
+    {  
+        if(char1.body.blocked.down) {   // touching -> blocked
+            char1.body.velocity.y = -200;
+        } else if(char1.body.blocked.up) { // if you hit your head, start falling down.
+                                           // (touching -> blocked  --- FIXED head climbing)
+            char1.body.velocity.y = 10
+        } else {
+            char1.body.velocity.y = -75;
+            char1.animations.play('climb', 20, true);
+        }
+    
+    }
     
     
     // rocker throw rocks
