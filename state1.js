@@ -1,4 +1,4 @@
-var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'phaser-example', { preload: preload, create: create });
+var demo = {}, centerX = 600/2, centerY = 300/2;
 
 demo.state1 = function(){};
 demo.state1.prototype = {
@@ -20,8 +20,9 @@ demo.state1.prototype = {
         back_wall = game.add.sprite(0, 0, "back_wall"); // NEW CAVE BACKGROUND
         back_wall.height = 400;
         back_wall.width = 600;
-        //text = game.add.text(centerX - 100, 20, 'Praetorium 3000');
-        //text.fill = '#ff00ff';
+        var style = { font: "bold 32px Arial", fill: "#fff", boundsAlignH: "center", boundsAlignV: "middle" };
+        text = game.add.text(0, 200, "phaser 2.4 text bounds", style);
+        text.setTextBounds(0, 100, 600, 100);
     },
     update: function(){
 
