@@ -17,6 +17,9 @@ demo.state1.prototype = {
         game.load.image("chipped_blade", "pix/chipped_blade.png");
         game.load.spritesheet('walk_rev', "pix/walkRevolver.png", 128, 128);
 
+        
+
+
         //game.load.spritesheet('walk', "pix/walkBowArrow.png", 128, 128);
         game.load.spritesheet('walk', "pix/RevolverPlusClumb.png", 128, 128);
 
@@ -54,6 +57,7 @@ demo.state1.prototype = {
         back_wall_2 = game.add.sprite(1024, 0);
         back_wall_2.height = 416;
         back_wall_2.width = 1024;
+        
 
         var map = game.add.tilemap('cave_map');
         map.addTilesetImage('larger_tiles');
