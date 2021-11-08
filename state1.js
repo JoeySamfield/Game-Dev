@@ -1,4 +1,4 @@
-var centerX = 600/2, centerY = 300/2, turn = true, nextFire = 0, arrowRate = 1000, revolverRate = 500, charWeapon = "Bow", midClimb = false, char1, bullet, arrow, land, platform, chest, charHP = 100, rockRate = 2000, rollerRate = 3000, nextOrb2 = 0, nextRock1 = 0, nextRock2 = 0, nextRock3 = 0, nextRock4 = 0, last_dir;
+var centerX = 600/2, centerY = 300/2, turn = true, nextFire = 0, arrowRate = 1000, revolverRate = 500, charWeapon = "Bow", midClimb = false, char1, bullet, arrow, land, platform, chest, charHP = 100, rockRate = 2000, rollerRate = 3000, nextOrb2 = 0, nextRock1 = 0, nextRock2 = 0, nextRock3 = 0, nextRock4 = 0, last_dir, peasant1Player, peasant1Text, p1_text_val, peasant1;
 
 demo.state1 = function(){};
 demo.state1.prototype = {
@@ -12,6 +12,8 @@ demo.state1.prototype = {
         game.load.image("vines_w_light_green", "pix/vines_w_light_green.png"); // vines tile
         game.load.image("x_sign", "pix/x_sign.png"); // X sign tile
         //game.load.image("purple", "pix/purple3.jpg");
+        game.load.image("peasant", "pix/peasant.png");
+        game.load.image("E_icon", "pix/E_icon.png")
         game.load.image("chipped_blade", "pix/chipped_blade.png");
         game.load.spritesheet('walk_rev', "pix/walkRevolver.png", 128, 128);
 
@@ -174,6 +176,25 @@ demo.state1.prototype = {
         drip5.animations.add("dripping", [0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59]);
         drip5.animations.play("dripping", 24, true);
 
+        // add Peasant speaker
+        speakers = game.add.group();
+        speakers.enableBody = true;
+        speakers.physicsBodyType = Phaser.Physics.ARCADE;
+        game.physics.arcade.enable(speakers);
+
+        peasant1 = speakers.create(150, 100, 'peasant');
+        peasant1.scale.setTo(1, 1);
+        peasant1.anchor.x = .5;
+        peasant1.anchor.y = .5;
+        peasant1.body.gravity.y = 400;
+        peasant1.body.collideWorldBounds = true;
+
+        // peasant1 Text
+        p1_text_val = '...'
+        peasant1Text = game.add.text(0, 0, 'Child: ' + p1_text_val, {font: "20px Arial", fill: "#ff9200", align: "center"});
+
+        peasant1E = game.add.sprite(0, 0, "E_icon")
+
         //add rockers
         enemies = game.add.group();
         enemies.enableBody = true;
@@ -256,12 +277,16 @@ demo.state1.prototype = {
         chest.anchor.x = .5
         chest.anchor.y = .5
 
+        use_key = game.input.keyboard.addKey(Phaser.Keyboard.E);
+        use_key.onDown.add(peasant1_dialogue);
+
     },
     update: function(){
 
         var stand = game.physics.arcade.collide(char1, cave_layer); // land -> cave_layer
         var enemystand = game.physics.arcade.collide(enemies, cave_layer); // land -> cave_layer
         var fireballStand = game.physics.arcade.collide(fireball, cave_layer); // land -> cave_layer
+        var speakersStand = game.physics.arcade.collide(speakers, cave_layer); // speakers collide with ground
         char1.body.velocity.x = 0;
         //check for overlap between bullets and walls, call function to kill bullet sprite
         game.physics.arcade.collide(bullets, cave_layer, this.hitWall); // land -> cave_layer // overlap -> collide
@@ -275,6 +300,7 @@ demo.state1.prototype = {
         game.physics.arcade.overlap(slash_R_2, enemies, this.meleeEnemyR);
         game.physics.arcade.collide(chest, cave_layer);
         var chestPlayer = game.physics.arcade.collide(char1, chest);
+        var peasant1Player = game.physics.arcade.overlap(char1, peasant1);
 
         // ALIGN slash/hurtboxes to player sides
         slash_L_2.alignTo(char1, Phaser.TOP_CENTER, -15, -35);
@@ -282,6 +308,12 @@ demo.state1.prototype = {
 
         // ALIGN sword to player back
         chipped_blade.alignTo(char1, Phaser.TOP_CENTER, 0, -30);
+
+        // ALIGN text to peasant1
+        peasant1Text.alignTo(peasant1, Phaser.BOTTOM_CENTER, 0, 0);
+
+        // ALIGN E to peasant1
+        peasant1E.alignTo(peasant1, Phaser.TOP_CENTER, 0, 0);
     
     if (game.input.keyboard.isDown(Phaser.Keyboard.A)){
             char1.body.velocity.x = -200;
@@ -378,6 +410,11 @@ demo.state1.prototype = {
             chest.loadTexture('chestOpen');
             chest.reset(chest.x, chest.y);
             charWeapon = "revolver"
+        }
+    }
+    if (peasant1Player){
+        if (game.input.keyboard.isDown(Phaser.Keyboard.E)){
+            peasant1Text.text = 'Sir, I am but a child! Save me!'
         }
     }
     },
@@ -516,4 +553,14 @@ demo.state1.prototype = {
             slash_R_2.animations.play('slash_R_2', 30, false);
         }
     }
+
+    
+    function peasant1_dialogue(){
+        //peasant1Player = peasant1Player
+        if (peasant1Player) { // collision detected globally?
+            peasant1Text.text = 'Child: Hey!'
+            
+        }
+    }
+    
 
