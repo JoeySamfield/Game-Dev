@@ -138,7 +138,7 @@ demo.state0.prototype = {
         //create sword (placeholder, kind of)
         chipped_blade = game.add.sprite(10,235, 'chipped_blade');
         
-        char1 = game.add.sprite(2100, 235, 'walk'); 
+        char1 = game.add.sprite(10, 235, 'walk'); 
         char1.scale.setTo(.25,.25);
         char1.frame = 0;
         char1.anchor.x = .5
