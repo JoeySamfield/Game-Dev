@@ -154,7 +154,7 @@ demo.state1.prototype = {
         bullets.setAll('checkWorldBounds', true);
         bullets.setAll('outOfBoundsKill', true);
 
-        //add bullets
+        //add arrows
         arrows = game.add.group();
         arrows.enableBody = true;
         arrows.physicsBodyType = Phaser.Physics.ARCADE;
