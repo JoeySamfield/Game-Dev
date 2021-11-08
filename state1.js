@@ -1,7 +1,9 @@
-var demo = {}, centerX = 2048/2, centerY = 416/2, turn = true, nextFire = 0, arrowRate = 1000, revolverRate = 500, charWeapon = "Bow", char1, bullet, arrow, land, platform, chest, charHP = 100, rockRate = 2000, rollerRate = 3000, nextOrb2 = 0, nextRock1 = 0, nextRock2 = 0, nextRock3 = 0, nextRock4 = 0, enviro;
 
-demo.state0 = function(){};
-demo.state0.prototype = {
+var centerX = 600/2, centerY = 300/2, turn = true, nextFire = 0, arrowRate = 1000, revolverRate = 500, charWeapon = "Bow", char1, bullet, arrow, land, platform, chest, charHP = 100, rockRate = 2000, rollerRate = 3000, nextOrb2 = 0, nextRock1 = 0, nextRock2 = 0, nextRock3 = 0, nextRock4 = 0, last_dir;
+
+demo.state1 = function(){};
+demo.state1.prototype = {
+
     preload: function(){
         game.load.image("background", "pix/sunrise.jpg");
         game.load.image("back_wall", "pix/back-walls.png");
@@ -14,8 +16,10 @@ demo.state0.prototype = {
         //game.load.image("purple", "pix/purple3.jpg");
         game.load.image("chipped_blade", "pix/chipped_blade.png");
         game.load.spritesheet('walk_rev', "pix/walkRevolver.png", 128, 128);
+
         //game.load.spritesheet('walk', "pix/walkBowArrow.png", 128, 128);
         game.load.spritesheet('walk', "pix/RevolverPlusClumb.png", 128, 128);
+
         game.load.spritesheet('rocker', "pix/rocker.png", 128, 128);
         game.load.spritesheet('rocker_backwards', "pix/rocker.png", 128, 128);
         game.load.spritesheet('water_drip', 'pix/water_drip.png', 32, 96);
@@ -28,7 +32,12 @@ demo.state0.prototype = {
         game.load.image('blackSquare', 'pix/blackBack.jpg');
         game.load.image('redSquare', 'pix/redBack.jfif');
         game.load.image('chestClosed', 'pix/chest_closed.png');
-        game.load.image('chestOpen', 'pix/chest_open.png')
+
+        game.load.image('chestOpen', 'pix/chest_open.png');
+        //game.load.image('empty_sprite', 'pix/empty_sprite.png');
+        game.load.spritesheet('slash_L_2', 'pix/slash_L_2.png', 32, 32);
+        game.load.spritesheet('slash_R_2', 'pix/slash_R_2.png', 32, 32);
+
 
     },
     create: function(){
@@ -83,12 +92,30 @@ demo.state0.prototype = {
         
 
         //create health bar
-        blackHP = land.create(25,390, "blackSquare")
-        blackHP.height = 20
-        blackHP.width = 210
-        redHP = land.create(30,395, "redSquare")
-        redHP.height = 10
+
+        blackHP = land.create(25,275, "blackSquare")
+        blackHP.height = 15
+        blackHP.width = 205
+        redHP = land.create(27,278, "redSquare")
+        redHP.height = 9
         redHP.width = 200
+        blackHP.fixedToCamera = true;
+        redHP.fixedToCamera = true;
+
+        // create slash/hurtbox
+        slash_L_2 = game.add.sprite(50, 50, 'slash_L_2');
+        slash_L_2.animations.add('slash_L_2', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]);
+        slash_L_2.frame = 0;
+        game.physics.arcade.enable(slash_L_2);
+        
+
+        slash_R_2 = game.add.sprite(50, 50, 'slash_R_2');
+        slash_R_2.animations.add('slash_R_2', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]);
+        slash_R_2.frame = 0;
+        game.physics.arcade.enable(slash_R_2);
+        //empty_sprite_L = game.add.sprite(50, 50, 'empty_sprite');
+        //empty_sprite_R = game.add.sprite(50, 50, 'empty_sprite');
+
 
         // create sword (placeholder, kind of)
         chipped_blade = game.add.sprite(50, 50, 'chipped_blade');
@@ -99,7 +126,9 @@ demo.state0.prototype = {
         char1.frame = 0;
         char1.anchor.x = .5
         char1.animations.add('walk', [0, 1, 2, 3, 4, 5,6,7,8,9,10,11,12,13,14,15]);
+
         char1.animations.add('climb', [17, 18, 19, 20, 21])
+
 
         //add gravity and physics
         game.physics.arcade.enable(char1);
@@ -110,8 +139,10 @@ demo.state0.prototype = {
         cursors = game.input.keyboard.createCursorKeys()
 
         //create game camera
-        //game.world.setBounds(0, 0, 1024, 416);
-        //game.camera.follow(char1);
+
+        game.world.setBounds(0, 0, 2048, 416);
+        game.camera.follow(char1);
+
         //game.camera.deadzone = new Phaser.Rectangle(centerX - 150, 75, 300, 50);
         
 
@@ -250,24 +281,54 @@ demo.state0.prototype = {
         game.physics.arcade.collide(rocks, cave_layer, this.rockLand); // land -> cave_layer // overlap -> collide
         game.physics.arcade.overlap(bullets, enemies, this.killEnemy);
         game.physics.arcade.overlap(arrows, enemies, this.killEnemy);
+
+        game.physics.arcade.overlap(slash_L_2, enemies, this.meleeEnemyL); // MELEE
+        game.physics.arcade.overlap(slash_R_2, enemies, this.meleeEnemyR);
         game.physics.arcade.collide(chest, cave_layer);
         var chestPlayer = game.physics.arcade.collide(char1, chest);
 
-        // ALIGN sword to player
+        // ALIGN slash/hurtboxes to player sides
+        slash_L_2.alignTo(char1, Phaser.TOP_CENTER, -15, -35);
+        slash_R_2.alignTo(char1, Phaser.TOP_CENTER, 15, -35);
+
+        // ALIGN sword to player back
         chipped_blade.alignTo(char1, Phaser.TOP_CENTER, 0, -30);
 
+    if (game.input.keyboard.isDown(Phaser.Keyboard.W) && stand)
+    {  
+        if(char1.body.blocked.down) {   // touching -> blocked
+            char1.body.velocity.y = -200;
+        } else if(char1.body.blocked.up) { // if you hit your head, start falling down.
+                                           // (touching -> blocked  --- FIXED head climbing)
+            char1.body.velocity.y = 10
+        } else {
+            char1.body.velocity.y = -75
+        }
+    
+    }
 
     if (game.input.keyboard.isDown(Phaser.Keyboard.A)){
             char1.body.velocity.x = -200;
             char1.animations.play('walk', 20, true);
             char1.scale.setTo(-.25,.25)
             turn = false;
+
             }
     else if (game.input.keyboard.isDown(Phaser.Keyboard.D)){
             char1.body.velocity.x = 200;
             char1.animations.play('walk', 5, true);
             char1.scale.setTo(.25,.25)
             turn = true;
+
+            last_dir = 'left'
+            }
+    else if (game.input.keyboard.isDown(Phaser.Keyboard.D)){
+            char1.body.velocity.x = 200;
+            char1.animations.play('walk', 20, true);
+            char1.scale.setTo(.25,.25)
+            turn = true;
+            last_dir = 'right'
+
             }
     else{
         char1.animations.stop('walk');
@@ -280,6 +341,7 @@ demo.state0.prototype = {
             fire();
         }
     }
+
     if (game.input.keyboard.isDown(Phaser.Keyboard.W) && stand)
     {  
         if(char1.body.blocked.down) {   // touching -> blocked
@@ -293,6 +355,12 @@ demo.state0.prototype = {
         }
     
     }
+
+    if (game.input.keyboard.isDown(Phaser.Keyboard.F)){
+        animateMelee();
+    }
+
+
     
     
     // rocker throw rocks
@@ -397,6 +465,28 @@ demo.state0.prototype = {
         }
     },
 
+    meleeEnemyL: function(s, e){
+        if (game.input.keyboard.isDown(Phaser.Keyboard.F)){
+            if (s.frame == 2) {
+                e.life = e.life - 1;
+                if (e.life < 1) {
+                    e.kill();
+                }
+            }
+        }
+    },
+    meleeEnemyR: function(s, e){
+        if (game.input.keyboard.isDown(Phaser.Keyboard.F)){
+            if (s.frame == 2) {
+                e.life = e.life - 1;
+                if (e.life < 1) {
+                    e.kill();
+                }
+            }
+        }
+    }
+
+
 
 
 }
@@ -448,4 +538,15 @@ demo.state0.prototype = {
     
 
         }
-    }  
+
+    }
+    function animateMelee(){
+        if (last_dir == 'left') {
+            slash_L_2.animations.play('slash_L_2', 30, false);
+        }
+        else if (last_dir == 'right') {
+            slash_R_2.animations.play('slash_R_2', 30, false);
+        }
+    }
+
+
