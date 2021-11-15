@@ -1,12 +1,13 @@
 var centerX = 600/2, centerY = 300/2, turn = true, nextFire = 0, arrowRate = 1000, revolverRate = 500, charWeapon = "Bow", midClimb = false, char1, bullet, arrow, land, platform, chest, charHP = 100, rockRate = 2000, rollerRate = 3000, nextOrb2 = 0, nextRock1 = 0, nextRock2 = 0, nextRock3 = 0, nextRock4 = 0, last_dir, peasant1Player, peasant1Text, p1_text_val, peasant1;
 
-demo.state1 = function(){};
-demo.state1.prototype = {
+demo.state2 = function(){};
+demo.state2.prototype = {
     preload: function(){
         game.load.image("background", "pix/sunrise.jpg");
-        game.load.image("back_wall", "pix/back-walls.png");
-        game.load.tilemap("cave_map", "pix/larger_map_json.json", null, Phaser.Tilemap.TILED_JSON); //'cave_map' does NOT need to be in json
-        game.load.image("larger_tiles", "pix/cave_tiles_png.png"); // Base Cave Tiles
+        //game.load.image("back_wall", "pix/back-walls.png");
+        game.load.tilemap("mountain_map", "pix/tut_map_2_json.json", null, Phaser.Tilemap.TILED_JSON); // TILES <----------
+        game.load.image("mountain-tileset", "pix/mountain-tileset.png"); // Base Cave Tiles // This was 'larger_tiles'    // TILES <----------
+        game.load.image("tileset-mountain-2", "pix/tileset-mountain-2.png"); // Mountain tiles 2
         game.load.image("rad_sign", "pix/rad_sign.png"); // radiation sign tile
         game.load.image("rope", "pix/rope.png"); // rope tile
         game.load.image("vines_w_light_green", "pix/vines_w_light_green.png"); // vines tile
@@ -14,7 +15,6 @@ demo.state1.prototype = {
         //game.load.image("purple", "pix/purple3.jpg");
         game.load.image("peasant", "pix/peasant.png");
         game.load.image("E_icon", "pix/E_icon.png")
-        game.load.image('door', 'pix/old_door.png');
         game.load.image("chipped_blade", "pix/chipped_blade.png");
         game.load.spritesheet('walk_rev', "pix/walkRevolver.png", 128, 128);
 
@@ -43,28 +43,29 @@ demo.state1.prototype = {
         game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
         sunrise = game.add.sprite(0,0,"background");
         sunrise.height = 416;
-        sunrise.width = 2048;
+        sunrise.width = 1024;
 
-        back_wall = game.add.sprite(0, 0, "back_wall"); // NEW CAVE BACKGROUND
-        back_wall.height = 416;
-        back_wall.width = 2048;
+        //back_wall = game.add.sprite(0, 0, "back_wall"); // NEW CAVE BACKGROUND
+        //back_wall.height = 416;
+        //back_wall.width = 1024;
 
-        back_wall_2 = game.add.sprite(1024, 0);
-        back_wall_2.height = 416;
-        back_wall_2.width = 1024;
+        //back_wall_2 = game.add.sprite(1024, 0);
+        //back_wall_2.height = 416;
+        //back_wall_2.width = 1024;
         
 
-        var map = game.add.tilemap('cave_map');
-        map.addTilesetImage('larger_tiles');
-        map.addTilesetImage('x_sign');
-        map.addTilesetImage('rad_sign');
-        map.addTilesetImage('vines_w_light_green');
-        map.addTilesetImage('rope');
-        map.addTilesetImage('grass');
-        cave_layer = map.createLayer('Tile Layer 1');
-        cave_layer2 = map.createLayer('Tile Layer 2');
+        var map = game.add.tilemap('mountain_map'); // TILES < -----------------------------------
+        map.addTilesetImage('mountain-tileset'); // This was 'larger_tiles'
+        map.addTilesetImage('tileset-mountain-2');
+        //map.addTilesetImage('x_sign');
+        //map.addTilesetImage('rad_sign');
+        //map.addTilesetImage('vines_w_light_green');
+        //map.addTilesetImage('rope');
+        //map.addTilesetImage('grass');
+        mountain_layer = map.createLayer('Tile Layer 1');
+        mountain_layer2 = map.createLayer('Tile Layer 2');
 
-        map.setCollisionBetween(2, 128, true, 'Tile Layer 1');
+        map.setCollisionBetween(2, 188, true, 'Tile Layer 1');
     
 
         
@@ -118,7 +119,7 @@ demo.state1.prototype = {
         chipped_blade = game.add.sprite(50, 50, 'chipped_blade');
 
         //create character 
-        char1 = game.add.sprite(50,50, 'walk'); 
+        char1 = game.add.sprite(50,350, 'walk'); 
         char1.scale.setTo(.25,.25);
         char1.frame = 0;
         char1.anchor.x = .5
@@ -134,7 +135,7 @@ demo.state1.prototype = {
         cursors = game.input.keyboard.createCursorKeys()
 
         //create game camera
-        game.world.setBounds(0, 0, 2048, 416);
+        game.world.setBounds(0, 0, 1024, 416);
         game.camera.follow(char1);
         //game.camera.deadzone = new Phaser.Rectangle(centerX - 150, 75, 300, 50);
         
@@ -157,6 +158,7 @@ demo.state1.prototype = {
         
 
         // add environmental elements
+        /*
         drip1 = game.add.sprite(550, 160, "water_drip");
         drip1.animations.add("dripping", [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59]);
         drip1.animations.play("dripping", 24, true);
@@ -176,12 +178,16 @@ demo.state1.prototype = {
         drip5 = game.add.sprite(1200, 288, "water_drip");
         drip5.animations.add("dripping", [0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59]);
         drip5.animations.play("dripping", 24, true);
+        */
 
         // add Peasant speaker
+        
         speakers = game.add.group();
         speakers.enableBody = true;
         speakers.physicsBodyType = Phaser.Physics.ARCADE;
         game.physics.arcade.enable(speakers);
+
+        /*
 
         peasant1 = speakers.create(150, 100, 'peasant');
         peasant1.scale.setTo(1, 1);
@@ -195,6 +201,7 @@ demo.state1.prototype = {
         peasant1Text = game.add.text(0, 0, 'Child: ' + p1_text_val, {font: "20px Arial", fill: "#ff9200", align: "center"});
 
         peasant1E = game.add.sprite(0, 0, "E_icon")
+        */
 
         //add rockers
         enemies = game.add.group();
@@ -203,7 +210,7 @@ demo.state1.prototype = {
         game.physics.arcade.enable(enemies);
 
 
-
+        /*
         rWizard1 = enemies.create(700, 50, 'wizard');
         rWizard1.scale.setTo(-.30, .30)
         rWizard1.anchor.x = .5
@@ -278,10 +285,7 @@ demo.state1.prototype = {
         chest.anchor.x = .5
         chest.anchor.y = .5
 
-        // add door
-        door = game.add.sprite(2016, 32, 'door');
-        game.physics.arcade.enable(door);
-        
+        */
 
         use_key = game.input.keyboard.addKey(Phaser.Keyboard.E);
         use_key.onDown.add(peasant1_dialogue, globalThis);
@@ -289,25 +293,24 @@ demo.state1.prototype = {
     },
     update: function(){
 
-        var stand = game.physics.arcade.collide(char1, cave_layer); // land -> cave_layer
-        var enemystand = game.physics.arcade.collide(enemies, cave_layer); // land -> cave_layer
-        var fireballStand = game.physics.arcade.collide(fireball, cave_layer); // land -> cave_layer
-        var speakersStand = game.physics.arcade.collide(speakers, cave_layer); // speakers collide with ground
+        var stand = game.physics.arcade.collide(char1, mountain_layer); // land -> cave_layer
+        var enemystand = game.physics.arcade.collide(enemies, mountain_layer); // land -> cave_layer
+        //var fireballStand = game.physics.arcade.collide(fireball, mountain_layer); // land -> cave_layer
+        var speakersStand = game.physics.arcade.collide(speakers, mountain_layer); // speakers collide with ground
         char1.body.velocity.x = 0;
         //check for overlap between bullets and walls, call function to kill bullet sprite
-        game.physics.arcade.collide(bullets, cave_layer, this.hitWall); // land -> cave_layer // overlap -> collide
-        game.physics.arcade.collide(arrows, cave_layer, this.hitWall);
-        game.physics.arcade.overlap(rocks, char1, this.hitPlayer);
-        game.physics.arcade.overlap(fireball, char1, this.hitPlayer);
-        game.physics.arcade.collide(rocks, cave_layer, this.rockLand); // land -> cave_layer // overlap -> collide
+        game.physics.arcade.collide(bullets, mountain_layer, this.hitWall); // land -> cave_layer // overlap -> collide
+        game.physics.arcade.collide(arrows, mountain_layer, this.hitWall);
+        //game.physics.arcade.overlap(rocks, char1, this.hitPlayer);
+        //game.physics.arcade.overlap(fireball, char1, this.hitPlayer);
+        //game.physics.arcade.collide(rocks, mountain_layer, this.rockLand); // land -> cave_layer // overlap -> collide
         game.physics.arcade.overlap(bullets, enemies, this.killEnemy);
         game.physics.arcade.overlap(arrows, enemies, this.killEnemy);
         game.physics.arcade.overlap(slash_L_2, enemies, this.meleeEnemyL); // MELEE
         game.physics.arcade.overlap(slash_R_2, enemies, this.meleeEnemyR);
-        game.physics.arcade.collide(chest, cave_layer);
-        var chestPlayer = game.physics.arcade.collide(char1, chest);
-        var peasant1Player = game.physics.arcade.overlap(char1, peasant1);
-        var doorPlayer = game.physics.arcade.overlap(char1, door);
+        //game.physics.arcade.collide(chest, mountain_layer);
+        //var chestPlayer = game.physics.arcade.collide(char1, chest);
+        //var peasant1Player = game.physics.arcade.overlap(char1, peasant1);
 
         // ALIGN slash/hurtboxes to player sides
         slash_L_2.alignTo(char1, Phaser.TOP_CENTER, -15, -35);
@@ -317,10 +320,10 @@ demo.state1.prototype = {
         chipped_blade.alignTo(char1, Phaser.TOP_CENTER, 0, -30);
 
         // ALIGN text to peasant1
-        peasant1Text.alignTo(peasant1, Phaser.BOTTOM_CENTER, 0, 0);
+        //peasant1Text.alignTo(peasant1, Phaser.BOTTOM_CENTER, 0, 0);
 
         // ALIGN E to peasant1
-        peasant1E.alignTo(peasant1, Phaser.TOP_CENTER, 0, 0);
+        //peasant1E.alignTo(peasant1, Phaser.TOP_CENTER, 0, 0);
     
     if (game.input.keyboard.isDown(Phaser.Keyboard.A)){
             char1.body.velocity.x = -200;
@@ -374,6 +377,8 @@ demo.state1.prototype = {
     
     
     // rocker throw rocks
+
+    /*
     if(rWizard1.life > 0){
         if (game.time.now > nextRock1){
             nextRock1 = game.time.now + rollerRate;
@@ -412,6 +417,9 @@ demo.state1.prototype = {
             this.throw(rocker4, "left");
     }
     }
+    */
+
+   /*
     if(chestPlayer){
         if (game.input.keyboard.isDown(Phaser.Keyboard.E)){
             chest.loadTexture('chestOpen');
@@ -419,15 +427,16 @@ demo.state1.prototype = {
             charWeapon = "revolver"
         }
     }
-    if (doorPlayer){
-        game.state.start('state2');
-    }
-    if (peasant1Player){
-        if (game.input.keyboard.isDown(Phaser.Keyboard.E)){
-            peasant1Text.text = 'Sir, I am but a child! Save me!'
-        }
-    }
+    */
+
+    //if (peasant1Player){
+      //  if (game.input.keyboard.isDown(Phaser.Keyboard.E)){
+        //    peasant1Text.text = 'Sir, I am but a child! Save me!'
+        //}
+    //}
     },
+
+    /*
     throw: function(m,side){
         //console.log('rocker');
         rock = rocks.getFirstDead();
@@ -440,6 +449,9 @@ demo.state1.prototype = {
         }
         rock.body.velocity.y = Math.random() * -(200 - 50) - 50;
     },
+    */
+
+    /*
     roll: function(m){
         console.log('rocker');
         fball = fireball.getFirstDead();
@@ -460,6 +472,7 @@ demo.state1.prototype = {
         fball.body.bounce.set(.85)
         fball.lifespan = (10000)
     },
+    */
     hitWall: function(b){
         //console.log('Hit wall');
         b.kill();
@@ -470,7 +483,6 @@ demo.state1.prototype = {
         redHP.width = charHP*2
         if (charHP == 0) {
             char1.kill()
-            chipped_blade.kill()
         }
     },
     rockLand: function(r, l){

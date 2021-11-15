@@ -1,5 +1,5 @@
 
-var demo = {},centerX = 600/2, centerY = 300/2, turn = true, nextFire = 0, arrowRate = 1000, revolverRate = 500, charWeapon = "Bow", char1, bullet, arrow, land, platform, stone, tall, chest, charHP = 100, rockRate = 2000, rollerRate = 3000, nextOrb2 = 0, nextRock1 = 0, nextRock2 = 0, nextRock3 = 0, nextRock4 = 0, last_dir;
+var demo = {},centerX = 600/2, centerY = 300/2, turn = true, midClimb = false, nextFire = 0, arrowRate = 1000, revolverRate = 500, charWeapon = "Bow", char1, bullet, arrow, land, platform, stone, tall, chest, charHP = 100, rockRate = 2000, rollerRate = 3000, nextOrb2 = 0, nextRock1 = 0, nextRock2 = 0, nextRock3 = 0, nextRock4 = 0, last_dir;
 
 
 demo.state0 = function(){};
@@ -144,7 +144,7 @@ demo.state0.prototype = {
         char1.anchor.x = .5
         char1.animations.add('walk', [0, 1, 2, 3, 4, 5,6,7,8,9,10,11,12,13,14,15]);
 
-        char1.animations.add('climb', [17, 18, 19, 20, 21])
+        char1.animations.add('climb', [16, 17, 18, 19, 20, 19, 18, 17]);
 
         stone = game.add.sprite(450, 257, 'stone');
         stone.scale.setTo(.1, .1);
@@ -281,22 +281,24 @@ demo.state0.prototype = {
         // ALIGN sword to player back
         chipped_blade.alignTo(char1, Phaser.TOP_CENTER, 0, -30);
         
-        if (game.input.keyboard.isDown(Phaser.Keyboard.W) && (stand || obstacle))
+        if (game.input.keyboard.isDown(Phaser.Keyboard.W) && (stand))
         {  
             if(char1.body.blocked.down) {   // touching -> blocked
-                char1.body.velocity.y = -200;
+                char1.body.velocity.y = -250;   // changed to -250 to reflect state1's values
             } else if(char1.body.blocked.up) { // if you hit your head, start falling down.
                                                // (touching -> blocked  --- FIXED head climbing)
                 char1.body.velocity.y = 10
             } else {
-                char1.body.velocity.y = -75
+                char1.body.velocity.y = -200
             }
         
         }
     
         if (game.input.keyboard.isDown(Phaser.Keyboard.A)){
                 char1.body.velocity.x = -200;
-                char1.animations.play('walk', 20, true);
+                if (midClimb == false) {
+                    char1.animations.play('walk', 20, true);
+                }
                 char1.scale.setTo(-.25,.25)
                 turn = false;
                 last_dir = 'left'
@@ -304,7 +306,9 @@ demo.state0.prototype = {
                 }
         else if (game.input.keyboard.isDown(Phaser.Keyboard.D)){
                 char1.body.velocity.x = 200;
-                char1.animations.play('walk', 5, true);
+                if (midClimb == false) {
+                    char1.animations.play('walk', 20, true);
+                }
                 char1.scale.setTo(.25,.25)
                 turn = true;
     
@@ -322,18 +326,22 @@ demo.state0.prototype = {
                 fire();
             }
         }
-        if (game.input.keyboard.isDown(Phaser.Keyboard.W) && (stand || obstacle || climber))
+        if (game.input.keyboard.isDown(Phaser.Keyboard.W) && (obstacle || climber))
     {  
         if(char1.body.blocked.down) {   // touching -> blocked
-            char1.body.velocity.y = -200;
+            char1.body.velocity.y = -250;
         } else if(char1.body.blocked.up) { // if you hit your head, start falling down.w
-                                           // (touching -> blocked  --- FIXED head climbing)w
+                                           // (touching -> blocked  --- FIXED head climbing)
+            midClimb = false
             char1.body.velocity.y = 10
         } else {
-            char1.body.velocity.y = -200;
+            char1.body.velocity.y = -75; // For some reason, this value is affecting regular jumps, too.
+            midClimb = true
             char1.animations.play('climb', 20, true);
         }
     
+    } else {
+        midClimb = false
     }
 
     if (game.input.keyboard.isDown(Phaser.Keyboard.F)){
