@@ -69,21 +69,21 @@ demo.state0.prototype = {
 
         game.add.sprite(10, 10, "p3");
         AD = game.add.sprite(25, 120, "AD");
-        AD.scale.setTo(.5, .5);
+        AD.scale.setTo(.4, .4);
         W = game.add.sprite(370, 120, "W");
-        W.scale.setTo(.5, .5);
-        ct = game.add.sprite(600, 75, "climbinstruct");
-        ct.scale.setTo(.4, .4);
-        space = game.add.sprite(1000, 130, "spacebar");
-        space.scale.setTo(.5, .5);
-        f = game.add.sprite(1315, 130, "f");
-        f.scale.setTo(.5, .5);
-        e = game.add.sprite(1550, 150, "e");
+        W.scale.setTo(.4, .4);
+        ct = game.add.sprite(595, 75, "climbinstruct");
+        ct.scale.setTo(.3, .3);
+        space = game.add.sprite(980, 120, "spacebar");
+        space.scale.setTo(.4, .4);
+        f = game.add.sprite(1300, 120, "f");
+        f.scale.setTo(.4, .4);
+        e = game.add.sprite(1500, 130, "e");
         e.scale.setTo(.4, .4);
-        t = game.add.sprite(1580, 170, "try");
-        t.scale.setTo(.4, .4);
-        begin = game.add.sprite(2050, 150, 'begin');
-        begin.scale.setTo(.5, .5);
+        //t = game.add.sprite(1580, 150, "try");
+        //t.scale.setTo(.4, .4);
+        begin = game.add.sprite(2000, 130, 'begin');
+        begin.scale.setTo(.4, .4);
         
         
         //old text
@@ -138,7 +138,7 @@ demo.state0.prototype = {
         //create sword (placeholder, kind of)
         chipped_blade = game.add.sprite(10,235, 'chipped_blade');
         
-        char1 = game.add.sprite(10, 235, 'walk'); 
+        char1 = game.add.sprite(50, 235, 'walk'); 
         char1.scale.setTo(.25,.25);
         char1.frame = 0;
         char1.anchor.x = .5
@@ -451,10 +451,13 @@ function shootBow(){
 function animateMelee(){
     if (last_dir == 'left') {
         slash_L_2.animations.play('slash_L_2', 30, false);
+        
     }
     else if (last_dir == 'right') {
         slash_R_2.animations.play('slash_R_2', 30, false);
+        
     }
+    
 }
 
 
