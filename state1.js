@@ -191,7 +191,7 @@ demo.state1.prototype = {
 
         // peasant1 Text
         p1_text_val = '...'
-        peasant1Text = game.add.text(0, 0, 'Child: ' + p1_text_val, {font: "20px Arial", fill: "#ff9200", align: "center"});
+        peasant1Text = game.add.text(0, 0, 'Hello there sir', {font: "20px Arial", fill: "#ff9200", align: "center"});
 
         peasant1E = game.add.sprite(0, 0, "E_icon")
 
@@ -413,10 +413,19 @@ demo.state1.prototype = {
         }
     }
     if (peasant1Player){
-        if (game.input.keyboard.isDown(Phaser.Keyboard.E)){
-            peasant1Text.text = 'Sir, I am but a child! Save me!'
+        peasant1Text.visible = true
+        if(peasant1Text.text != 'Please sir, fight the boss') {
+            peasant1E.visible = true
         }
+        if (game.input.keyboard.isDown(Phaser.Keyboard.E)){
+            peasant1Text.text = 'Please sir, fight the boss'
+            peasant1E.visible = false
+        }
+    } else {
+        peasant1E.visible = false
+        peasant1Text.visible = false
     }
+
     },
     throw: function(m,side){
         //console.log('rocker');
