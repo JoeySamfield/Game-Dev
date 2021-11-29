@@ -210,9 +210,9 @@ demo.state2.prototype = {
         game.physics.arcade.enable(enemies);
 
 
-        /*
-        rWizard1 = enemies.create(700, 50, 'wizard');
-        rWizard1.scale.setTo(-.30, .30)
+        
+        rWizard1 = enemies.create(850, 100, 'wizard');
+        rWizard1.scale.setTo(-.80, .80)
         rWizard1.anchor.x = .5
         rWizard1.anchor.y = .5
         rWizard1.body.gravity.y = 400;
@@ -221,51 +221,51 @@ demo.state2.prototype = {
         rWizard1.animations.add("rocker",[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3, 4, 5]); // added zeros for better pace
         rWizard1.animations.add("rocker_backwards", [5, 4, 3, 2, 1, 0]);
 
-        rWizard2 = enemies.create(1910, 50, 'wizard');
-        rWizard2.scale.setTo(-.30, .30)
-        rWizard2.anchor.x = .5
-        rWizard2.anchor.y = .5
-        rWizard2.body.gravity.y = 400;
-        rWizard2.body.collideWorldBounds = true;
-        rWizard2.life = 2;
-        rWizard2.animations.add("rocker",[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3, 4, 5]); // added zeros for better pace
-        rWizard2.animations.add("rocker_backwards", [5, 4, 3, 2, 1, 0]);
+        // rWizard2 = enemies.create(1910, 50, 'wizard');
+        // rWizard2.scale.setTo(-.30, .30)
+        // rWizard2.anchor.x = .5
+        // rWizard2.anchor.y = .5
+        // rWizard2.body.gravity.y = 400;
+        // rWizard2.body.collideWorldBounds = true;
+        // rWizard2.life = 2;
+        // rWizard2.animations.add("rocker",[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3, 4, 5]); // added zeros for better pace
+        // rWizard2.animations.add("rocker_backwards", [5, 4, 3, 2, 1, 0]);
 
-        rocker2 = enemies.create(600, 225, 'rocker');
-        rocker2.scale.setTo(-.40,.40)
-        rocker2.anchor.x = .5
-        rocker2.anchor.y = .5
-        rocker2.body.gravity.y = 400;
-        rocker2.body.collideWorldBounds = true;
-        rocker2.life = 2;
-        rocker2.animations.add("rocker1",[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3, 4, 5]); // added zeros for better pace
-        rocker2.animations.add("rocker_backwards1", [5, 4, 3, 2, 1, 0]);
+        // rocker2 = enemies.create(600, 225, 'rocker');
+        // rocker2.scale.setTo(-.40,.40)
+        // rocker2.anchor.x = .5
+        // rocker2.anchor.y = .5
+        // rocker2.body.gravity.y = 400;
+        // rocker2.body.collideWorldBounds = true;
+        // rocker2.life = 2;
+        // rocker2.animations.add("rocker1",[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3, 4, 5]); // added zeros for better pace
+        // rocker2.animations.add("rocker_backwards1", [5, 4, 3, 2, 1, 0]);
 
-        rocker3 = enemies.create(1150, 114, 'rocker');
-        rocker3.scale.setTo(.40,.40)
-        rocker3.anchor.x = .5
-        rocker3.anchor.y = .5
-        rocker3.body.gravity.y = 400;
-        rocker3.body.collideWorldBounds = true;
-        rocker3.life = 2;
-        rocker3.animations.add("rocker",[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3, 4, 5]); // added zeros for better pace
+        // rocker3 = enemies.create(1150, 114, 'rocker');
+        // rocker3.scale.setTo(.40,.40)
+        // rocker3.anchor.x = .5
+        // rocker3.anchor.y = .5
+        // rocker3.body.gravity.y = 400;
+        // rocker3.body.collideWorldBounds = true;
+        // rocker3.life = 2;
+        // rocker3.animations.add("rocker",[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3, 4, 5]); // added zeros for better pace
 
-        rocker4 = enemies.create(1250, 350, 'rocker');
-        rocker4.scale.setTo(-.40,.40)
-        rocker4.anchor.x = .5
-        rocker4.anchor.y = .5
-        rocker4.body.gravity.y = 400;
-        rocker4.body.collideWorldBounds = true;
-        rocker4.life = 2;
-        rocker4.animations.add("rocker",[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3, 4, 5]); // added zeros for better pace
+        // rocker4 = enemies.create(1250, 350, 'rocker');
+        // rocker4.scale.setTo(-.40,.40)
+        // rocker4.anchor.x = .5
+        // rocker4.anchor.y = .5
+        // rocker4.body.gravity.y = 400;
+        // rocker4.body.collideWorldBounds = true;
+        // rocker4.life = 2;
+        // rocker4.animations.add("rocker",[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3, 4, 5]); // added zeros for better pace
         
-        //add rocks
-        rocks = game.add.group()
-        rocks.enableBody = true;
-        rocks.physicsBodyType = Phaser.Physics.ARCADE;
-        rocks.createMultiple(200, 'rock');
-        rocks.setAll('checkWorldBounds', true);
-        rocks.setAll('outOfBoundsKill', true);
+        // //add rocks
+        // rocks = game.add.group()
+        // rocks.enableBody = true;
+        // rocks.physicsBodyType = Phaser.Physics.ARCADE;
+        // rocks.createMultiple(200, 'rock');
+        // rocks.setAll('checkWorldBounds', true);
+        // rocks.setAll('outOfBoundsKill', true);
 
         //add blue fire
         fireball = game.add.group()
@@ -275,17 +275,17 @@ demo.state2.prototype = {
         fireball.setAll('checkWorldBounds', true);
         fireball.setAll('outOfBoundsKill', true);
 
-        //add chest
-        chest = game.add.sprite(850, 272, 'chestClosed');
-        chest.scale.setTo(.1, .1);
-        game.physics.arcade.enable(chest);
-        chest.body.gravity.y = 400;
-        chest.body.collideWorldBounds = true;
-        chest.body.immovable = true;
-        chest.anchor.x = .5
-        chest.anchor.y = .5
+        // //add chest
+        // chest = game.add.sprite(850, 272, 'chestClosed');
+        // chest.scale.setTo(.1, .1);
+        // game.physics.arcade.enable(chest);
+        // chest.body.gravity.y = 400;
+        // chest.body.collideWorldBounds = true;
+        // chest.body.immovable = true;
+        // chest.anchor.x = .5
+        // chest.anchor.y = .5
 
-        */
+        
 
         use_key = game.input.keyboard.addKey(Phaser.Keyboard.E);
         use_key.onDown.add(peasant1_dialogue, globalThis);
@@ -295,14 +295,14 @@ demo.state2.prototype = {
 
         var stand = game.physics.arcade.collide(char1, mountain_layer); // land -> cave_layer
         var enemystand = game.physics.arcade.collide(enemies, mountain_layer); // land -> cave_layer
-        //var fireballStand = game.physics.arcade.collide(fireball, mountain_layer); // land -> cave_layer
+        var fireballStand = game.physics.arcade.collide(fireball, mountain_layer); // land -> cave_layer
         var speakersStand = game.physics.arcade.collide(speakers, mountain_layer); // speakers collide with ground
         char1.body.velocity.x = 0;
         //check for overlap between bullets and walls, call function to kill bullet sprite
         game.physics.arcade.collide(bullets, mountain_layer, this.hitWall); // land -> cave_layer // overlap -> collide
         game.physics.arcade.collide(arrows, mountain_layer, this.hitWall);
         //game.physics.arcade.overlap(rocks, char1, this.hitPlayer);
-        //game.physics.arcade.overlap(fireball, char1, this.hitPlayer);
+        game.physics.arcade.overlap(fireball, char1, this.hitPlayer);
         //game.physics.arcade.collide(rocks, mountain_layer, this.rockLand); // land -> cave_layer // overlap -> collide
         game.physics.arcade.overlap(bullets, enemies, this.killEnemy);
         game.physics.arcade.overlap(arrows, enemies, this.killEnemy);
@@ -373,12 +373,11 @@ demo.state2.prototype = {
     } else {
         midClimb = false
     }
-
     
     
     // rocker throw rocks
 
-    /*
+    
     if(rWizard1.life > 0){
         if (game.time.now > nextRock1){
             nextRock1 = game.time.now + rollerRate;
@@ -388,91 +387,91 @@ demo.state2.prototype = {
         }
 
     }
-    if(rWizard2.life > 0){
-        if (game.time.now > nextOrb2){
-            nextOrb2 = game.time.now + rollerRate;
-            rWizard2.animations.play("rocker",10,false);
-            this.roll(rWizard2);
+    // if(rWizard2.life > 0){
+    //     if (game.time.now > nextOrb2){
+    //         nextOrb2 = game.time.now + rollerRate;
+    //         rWizard2.animations.play("rocker",10,false);
+    //         this.roll(rWizard2);
 
-        }
-    }
-    if(rocker2.life > 0){
-        if (game.time.now > nextRock2){
-            nextRock2 = game.time.now + rockRate;
-            rocker2.animations.play("rocker1",10,false);
-            this.throw(rocker2,"left");
-    }
-    }
-    if(rocker3.life > 0){
-        if (game.time.now > nextRock3){
-            nextRock3 = game.time.now + rockRate;
-            rocker3.animations.play("rocker",10,false);
-            this.throw(rocker3,"right");
-    }
-    }
-    if(rocker4.life > 0){
-        if (game.time.now > nextRock4){
-            nextRock4 = game.time.now + rockRate;
-            rocker4.animations.play("rocker",10,false);
-            this.throw(rocker4, "left");
-    }
-    }
-    */
+    //     }
+    // }
+    // if(rocker2.life > 0){
+    //     if (game.time.now > nextRock2){
+    //         nextRock2 = game.time.now + rockRate;
+    //         rocker2.animations.play("rocker1",10,false);
+    //         this.throw(rocker2,"left");
+    // }
+    // }
+    // if(rocker3.life > 0){
+    //     if (game.time.now > nextRock3){
+    //         nextRock3 = game.time.now + rockRate;
+    //         rocker3.animations.play("rocker",10,false);
+    //         this.throw(rocker3,"right");
+    // }
+    // }
+    // if(rocker4.life > 0){
+    //     if (game.time.now > nextRock4){
+    //         nextRock4 = game.time.now + rockRate;
+    //         rocker4.animations.play("rocker",10,false);
+    //         this.throw(rocker4, "left");
+    // }
+    // }
+    
 
-   /*
-    if(chestPlayer){
-        if (game.input.keyboard.isDown(Phaser.Keyboard.E)){
-            chest.loadTexture('chestOpen');
-            chest.reset(chest.x, chest.y);
-            charWeapon = "revolver"
-        }
-    }
-    */
+   
+    // if(chestPlayer){
+    //     if (game.input.keyboard.isDown(Phaser.Keyboard.E)){
+    //         chest.loadTexture('chestOpen');
+    //         chest.reset(chest.x, chest.y);
+    //         charWeapon = "revolver"
+    //     }
+    // }
+    
 
-    //if (peasant1Player){
-      //  if (game.input.keyboard.isDown(Phaser.Keyboard.E)){
-        //    peasant1Text.text = 'Sir, I am but a child! Save me!'
-        //}
-    //}
-    },
+    // if (peasant1Player){
+    //     if (game.input.keyboard.isDown(Phaser.Keyboard.E)){
+    //         peasant1Text.text = 'Sir, I am but a child! Save me!'
+    //     }
+    // }
+     },
 
-    /*
-    throw: function(m,side){
-        //console.log('rocker');
-        rock = rocks.getFirstDead();
-        rock.reset(m.x, m.y - 20);
-        rock.body.gravity.y = 400;
-        if(side == "right") {
-            rock.body.velocity.x = Math.random() * (400 - 200) + 200;
-        } else {
-            rock.body.velocity.x = (Math.random() * (400 - 200) + 200)*-1;
-        }
-        rock.body.velocity.y = Math.random() * -(200 - 50) - 50;
-    },
-    */
+    
+    // throw: function(m,side){
+    //     //console.log('rocker');
+    //     rock = rocks.getFirstDead();
+    //     rock.reset(m.x, m.y - 20);
+    //     rock.body.gravity.y = 400;
+    //     if(side == "right") {
+    //         rock.body.velocity.x = Math.random() * (400 - 200) + 200;
+    //     } else {
+    //         rock.body.velocity.x = (Math.random() * (400 - 200) + 200)*-1;
+    //     }
+    //     rock.body.velocity.y = Math.random() * -(200 - 50) - 50;
+    // },
+    // */
 
-    /*
+    
     roll: function(m){
         console.log('rocker');
         fball = fireball.getFirstDead();
         if(m.scale.x > 0) {
-            fball.reset(m.x+7, m.y - 25);
+            fball.reset(m.x+7, m.y - 50);
         } else {
-            fball.reset(m.x-7, m.y - 25);
+            fball.reset(m.x-7, m.y - 50);
         }
         
         fball.scale.setTo(.1,.1)
         fball.body.gravity.y = 900;
         if(m.scale.x > 0) {
-            fball.body.velocity.x = 130;
+            fball.body.velocity.x = Math.random() * (400 - 200) + 200;
         } else {
-            fball.body.velocity.x = -130
+            fball.body.velocity.x = (Math.random() * (400 - 200) + 200)*-1
         }
-        fball.body.velocity.y = -100;
-        fball.body.bounce.set(.85)
-        fball.lifespan = (10000)
+        fball.body.velocity.y = -Math.random() * -(200 - 50) - 50;
+        fball.body.bounce.set(.99)
+        fball.lifespan = (15000)
     },
-    */
+    
     hitWall: function(b){
         //console.log('Hit wall');
         b.kill();
