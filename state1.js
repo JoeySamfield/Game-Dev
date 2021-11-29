@@ -480,6 +480,7 @@ demo.state1.prototype = {
         if (charHP == 0) {
             char1.kill()
             chipped_blade.kill()
+            game.state.start('state3');
         }
     },
     rockLand: function(r, l){

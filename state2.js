@@ -483,6 +483,7 @@ demo.state2.prototype = {
         redHP.width = charHP*2
         if (charHP == 0) {
             char1.kill()
+            game.state.start('state3');
         }
     },
     rockLand: function(r, l){
