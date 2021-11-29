@@ -24,6 +24,7 @@ demo.state2.prototype = {
         game.load.spritesheet('rocker_backwards', "pix/rocker.png", 128, 128);
         game.load.spritesheet('water_drip', 'pix/water_drip.png', 32, 96);
         game.load.spritesheet('wizard', "pix/redWizard.png", 128, 128);
+        game.load.spritesheet('boss', "pix/boss.png", 1024, 1024);
         game.load.image('anArrow', 'pix/arrow.png');
         game.load.image("grass", "pix/grass.png"); // grass tile
         game.load.image('bullet', 'pix/bullet.png');
@@ -211,61 +212,15 @@ demo.state2.prototype = {
 
 
         
-        rWizard1 = enemies.create(850, 100, 'wizard');
-        rWizard1.scale.setTo(-.80, .80)
-        rWizard1.anchor.x = .5
-        rWizard1.anchor.y = .5
-        rWizard1.body.gravity.y = 400;
-        rWizard1.body.collideWorldBounds = true;
-        rWizard1.life = 2;
-        rWizard1.animations.add("rocker",[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3, 4, 5]); // added zeros for better pace
-        rWizard1.animations.add("rocker_backwards", [5, 4, 3, 2, 1, 0]);
-
-        // rWizard2 = enemies.create(1910, 50, 'wizard');
-        // rWizard2.scale.setTo(-.30, .30)
-        // rWizard2.anchor.x = .5
-        // rWizard2.anchor.y = .5
-        // rWizard2.body.gravity.y = 400;
-        // rWizard2.body.collideWorldBounds = true;
-        // rWizard2.life = 2;
-        // rWizard2.animations.add("rocker",[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3, 4, 5]); // added zeros for better pace
-        // rWizard2.animations.add("rocker_backwards", [5, 4, 3, 2, 1, 0]);
-
-        // rocker2 = enemies.create(600, 225, 'rocker');
-        // rocker2.scale.setTo(-.40,.40)
-        // rocker2.anchor.x = .5
-        // rocker2.anchor.y = .5
-        // rocker2.body.gravity.y = 400;
-        // rocker2.body.collideWorldBounds = true;
-        // rocker2.life = 2;
-        // rocker2.animations.add("rocker1",[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3, 4, 5]); // added zeros for better pace
-        // rocker2.animations.add("rocker_backwards1", [5, 4, 3, 2, 1, 0]);
-
-        // rocker3 = enemies.create(1150, 114, 'rocker');
-        // rocker3.scale.setTo(.40,.40)
-        // rocker3.anchor.x = .5
-        // rocker3.anchor.y = .5
-        // rocker3.body.gravity.y = 400;
-        // rocker3.body.collideWorldBounds = true;
-        // rocker3.life = 2;
-        // rocker3.animations.add("rocker",[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3, 4, 5]); // added zeros for better pace
-
-        // rocker4 = enemies.create(1250, 350, 'rocker');
-        // rocker4.scale.setTo(-.40,.40)
-        // rocker4.anchor.x = .5
-        // rocker4.anchor.y = .5
-        // rocker4.body.gravity.y = 400;
-        // rocker4.body.collideWorldBounds = true;
-        // rocker4.life = 2;
-        // rocker4.animations.add("rocker",[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3, 4, 5]); // added zeros for better pace
-        
-        // //add rocks
-        // rocks = game.add.group()
-        // rocks.enableBody = true;
-        // rocks.physicsBodyType = Phaser.Physics.ARCADE;
-        // rocks.createMultiple(200, 'rock');
-        // rocks.setAll('checkWorldBounds', true);
-        // rocks.setAll('outOfBoundsKill', true);
+        boss = enemies.create(850, 100, 'boss');
+        boss.scale.setTo(-.20, .20)
+        boss.anchor.x = .5
+        boss.anchor.y = .5
+        boss.body.gravity.y = 400;
+        boss.body.collideWorldBounds = true;
+        boss.life = 2;
+        boss.animations.add("rocker",[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3, 4, 5, 6,5, 4, 3, 2, 1, 0]); // added zeros for better pace
+        boss.animations.add("rocker_backwards", [5, 4, 3, 2, 1, 0]);
 
         //add blue fire
         fireball = game.add.group()
@@ -273,19 +228,7 @@ demo.state2.prototype = {
         fireball.physicsBodyType = Phaser.Physics.ARCADE;
         fireball.createMultiple(200, 'rolledStone');
         fireball.setAll('checkWorldBounds', true);
-        fireball.setAll('outOfBoundsKill', true);
-
-        // //add chest
-        // chest = game.add.sprite(850, 272, 'chestClosed');
-        // chest.scale.setTo(.1, .1);
-        // game.physics.arcade.enable(chest);
-        // chest.body.gravity.y = 400;
-        // chest.body.collideWorldBounds = true;
-        // chest.body.immovable = true;
-        // chest.anchor.x = .5
-        // chest.anchor.y = .5
-
-        
+        fireball.setAll('outOfBoundsKill', true);        
 
         use_key = game.input.keyboard.addKey(Phaser.Keyboard.E);
         use_key.onDown.add(peasant1_dialogue, globalThis);
@@ -378,98 +321,52 @@ demo.state2.prototype = {
     // rocker throw rocks
 
     
-    if(rWizard1.life > 0){
+    if(boss.life > 0){
         if (game.time.now > nextRock1){
             nextRock1 = game.time.now + rollerRate;
-            rWizard1.animations.play("rocker",10,false);
-            this.roll(rWizard1);
-
+            boss.animations.play("rocker",10,false);
+            this.bossRoll(boss,1);
+            this.bossRoll(boss,2);
+            this.bossRoll(boss,3);
+            this.bossRoll(boss,4);
         }
 
     }
-    // if(rWizard2.life > 0){
-    //     if (game.time.now > nextOrb2){
-    //         nextOrb2 = game.time.now + rollerRate;
-    //         rWizard2.animations.play("rocker",10,false);
-    //         this.roll(rWizard2);
-
-    //     }
-    // }
-    // if(rocker2.life > 0){
-    //     if (game.time.now > nextRock2){
-    //         nextRock2 = game.time.now + rockRate;
-    //         rocker2.animations.play("rocker1",10,false);
-    //         this.throw(rocker2,"left");
-    // }
-    // }
-    // if(rocker3.life > 0){
-    //     if (game.time.now > nextRock3){
-    //         nextRock3 = game.time.now + rockRate;
-    //         rocker3.animations.play("rocker",10,false);
-    //         this.throw(rocker3,"right");
-    // }
-    // }
-    // if(rocker4.life > 0){
-    //     if (game.time.now > nextRock4){
-    //         nextRock4 = game.time.now + rockRate;
-    //         rocker4.animations.play("rocker",10,false);
-    //         this.throw(rocker4, "left");
-    // }
-    // }
-    
-
    
-    // if(chestPlayer){
-    //     if (game.input.keyboard.isDown(Phaser.Keyboard.E)){
-    //         chest.loadTexture('chestOpen');
-    //         chest.reset(chest.x, chest.y);
-    //         charWeapon = "revolver"
-    //     }
-    // }
-    
-
-    // if (peasant1Player){
-    //     if (game.input.keyboard.isDown(Phaser.Keyboard.E)){
-    //         peasant1Text.text = 'Sir, I am but a child! Save me!'
-    //     }
-    // }
      },
 
     
-    // throw: function(m,side){
-    //     //console.log('rocker');
-    //     rock = rocks.getFirstDead();
-    //     rock.reset(m.x, m.y - 20);
-    //     rock.body.gravity.y = 400;
-    //     if(side == "right") {
-    //         rock.body.velocity.x = Math.random() * (400 - 200) + 200;
-    //     } else {
-    //         rock.body.velocity.x = (Math.random() * (400 - 200) + 200)*-1;
-    //     }
-    //     rock.body.velocity.y = Math.random() * -(200 - 50) - 50;
-    // },
-    // */
-
-    
-    roll: function(m){
+    bossRoll: function(m,id){
         console.log('rocker');
         fball = fireball.getFirstDead();
-        if(m.scale.x > 0) {
-            fball.reset(m.x+7, m.y - 50);
-        } else {
-            fball.reset(m.x-7, m.y - 50);
-        }
-        
-        fball.scale.setTo(.1,.1)
         fball.body.gravity.y = 900;
-        if(m.scale.x > 0) {
-            fball.body.velocity.x = Math.random() * (400 - 200) + 200;
-        } else {
-            fball.body.velocity.x = (Math.random() * (400 - 200) + 200)*-1
-        }
-        fball.body.velocity.y = -Math.random() * -(200 - 50) - 50;
-        fball.body.bounce.set(.99)
-        fball.lifespan = (15000)
+        fball.body.bounce.set(.80)
+        fball.lifespan = (2100)
+
+        if(id == 1) {
+            fball.reset(m.x + 45, m.y - 70)
+            fball.scale.setTo(.17,.17)
+            fball.body.velocity.x = Math.random() * (400 - 200) + 300
+            fball.body.velocity.y = -Math.random() * -(200 - 50) - 100
+        } 
+        if(id == 2) {
+            fball.reset(m.x - 45, m.y - 70)
+            fball.scale.setTo(.17,.17)
+            fball.body.velocity.x = -(Math.random() * (400 - 200) + 300)
+            fball.body.velocity.y = -Math.random() * -(200 - 50) - 100
+        } 
+        if(id == 3) {
+            fball.reset(m.x + 45, m.y - 50)
+            fball.scale.setTo(.17,.17)
+            fball.body.velocity.x = Math.random() * (400 - 200) + 600
+            fball.body.velocity.y = -Math.random() * -(200 - 50) - 50
+        } 
+        if(id == 4) {
+            fball.reset(m.x - 45, m.y - 50)
+            fball.scale.setTo(.17,.17)
+            fball.body.velocity.x = -(Math.random() * (400 - 200) + 600)
+            fball.body.velocity.y = -Math.random() * -(200 - 50) - 50
+        } 
     },
     
     hitWall: function(b){
