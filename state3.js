@@ -1,6 +1,7 @@
 var centerX = 600/2, centerY = 300/2;
 demo.state3 = function(){};
 demo.state3.prototype = {
+    //game over screen
     preload: function(){
         game.load.image('GO', 'pix/gameover.png');
         game.load.image('restart', 'pix/restart.png');

@@ -1,4 +1,4 @@
-var centerX = 600/2, centerY = 300/2, turn = true, nextFire = 0, arrowRate = 1000, revolverRate = 500, charWeapon = "Bow", midClimb = false, char1, bullet, arrow, land, platform, chest, charHP = 100, rockRate = 2000, rollerRate = 3000, nextOrb2 = 0, nextRock1 = 0, nextRock2 = 0, nextRock3 = 0, nextRock4 = 0, last_dir, peasant1Player, peasant1Text, p1_text_val, peasant1;
+var centerX = 600/2, centerY = 300/2, turn = true, nextFire = 0, arrowRate = 1000, revolverRate = 500, charWeapon = "Bow", midClimb = false, char1, bullet, arrow, land, platform, chest, charHP = 100, rockRate = 2000, rollerRate = 3000, nextOrb2 = 0, nextRock1 = 0, nextRock2 = 0, nextRock3 = 0, nextRock4 = 0, last_dir, peasant1Player, peasant1Text, p1_text_val, peasant1, end;
 
 demo.state2 = function(){};
 demo.state2.prototype = {
@@ -85,6 +85,20 @@ demo.state2.prototype = {
         blackHP.fixedToCamera = true;
         redHP.fixedToCamera = true;
 
+        //create boss health bar
+        bblackHP = land.create(100, 20, "blackSquare")
+        bblackHP.height = 30;
+        bblackHP.width = 400;
+        //bblackHP.anchor.x = .5;
+        bblackHP.anchor.y = .5;
+        bredHP = land.create(105, 20, "redSquare");
+        bredHP.height = 25;
+        bredHP.width = 390;
+        //bredHP.anchor.x = .5;
+        bredHP.anchor.y = .5;
+        bblackHP.fixedToCamera = true;
+        bredHP.fixedToCamera = true;
+
         // create slash/hurtbox
         slash_L_2 = game.add.sprite(50, 50, 'slash_L_2');
         slash_L_2.animations.add('slash_L_2', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]);
@@ -157,8 +171,10 @@ demo.state2.prototype = {
         boss.anchor.y = .5
         boss.body.gravity.y = 400;
         boss.body.collideWorldBounds = true;
-        boss.life = 2;
-        boss.animations.add("rocker",[0, 0, 0, 0, 0, 0, 1, 2, 3, 4, 5, 6,5, 4, 3, 2, 1, 0, 0, 0, 0, 0, 0, 0, 0]); // added zeros for better pace
+
+        boss.life = 5;
+        boss.animations.add("rocker",[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3, 4, 5, 6,5, 4, 3, 2, 1, 0]); // added zeros for better pace
+
         boss.animations.add("rocker_backwards", [5, 4, 3, 2, 1, 0]);
 
         //add blue fire
@@ -272,6 +288,9 @@ demo.state2.prototype = {
         midClimb = false
     }
     
+    if (game.time.now > (end + 2000)){
+        game.state.start('state4');
+    }
     
     // rocker throw rocks
     if(boss.life > 0){
@@ -282,9 +301,12 @@ demo.state2.prototype = {
             this.bossRoll(boss,2);
             this.bossRoll(boss,3);
             this.bossRoll(boss,4);
+            //bredHP.width = (boss.life/5) * 390;
         }
+    
 
     }
+    
    
      },
 
@@ -329,7 +351,7 @@ demo.state2.prototype = {
         r.kill();
         charHP = charHP - 20
         redHP.width = charHP*2
-        if (charHP == 0) {
+        if (charHP == 0 && boss.life > 0) {
             char1.kill()
             charHP = 100
             game.state.start('state3');
@@ -341,8 +363,15 @@ demo.state2.prototype = {
     killEnemy: function(b, e){
         b.kill();
         e.life = e.life - 1;
+        if (e == boss){
+            bredHP.width = (e.life/5) * 390;
+        }
         if (e.life < 1) {
             e.kill();
+            if (e == boss){
+                bblackHP.width = 0;
+                end = game.time.now;
+            }
         }
     },
     meleeEnemyL: function(s, e){
