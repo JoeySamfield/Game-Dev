@@ -118,6 +118,20 @@ demo.state2.prototype = {
         blackHP.fixedToCamera = true;
         redHP.fixedToCamera = true;
 
+        //create boss health bar
+        bblackHP = land.create(100, 20, "blackSquare")
+        bblackHP.height = 30;
+        bblackHP.width = 400;
+        //bblackHP.anchor.x = .5;
+        bblackHP.anchor.y = .5;
+        bredHP = land.create(105, 20, "redSquare");
+        bredHP.height = 25;
+        bredHP.width = 390;
+        //bredHP.anchor.x = .5;
+        bredHP.anchor.y = .5;
+        bblackHP.fixedToCamera = true;
+        bredHP.fixedToCamera = true;
+
         // create slash/hurtbox
         slash_L_2 = game.add.sprite(50, 50, 'slash_L_2');
         slash_L_2.animations.add('slash_L_2', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]);
@@ -234,7 +248,7 @@ demo.state2.prototype = {
         boss.anchor.y = .5
         boss.body.gravity.y = 400;
         boss.body.collideWorldBounds = true;
-        boss.life = 2;
+        boss.life = 5;
         boss.animations.add("rocker",[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3, 4, 5, 6,5, 4, 3, 2, 1, 0]); // added zeros for better pace
         boss.animations.add("rocker_backwards", [5, 4, 3, 2, 1, 0]);
 
@@ -370,9 +384,12 @@ demo.state2.prototype = {
             this.bossRoll(boss,2);
             this.bossRoll(boss,3);
             this.bossRoll(boss,4);
+            //bredHP.width = (boss.life/5) * 390;
         }
+    
 
     }
+    
    
      },
 
@@ -418,10 +435,10 @@ demo.state2.prototype = {
         r.kill();
         charHP = charHP - 20
         redHP.width = charHP*2
-        if (charHP == 0) {
+        /*if (charHP == 0) {
             char1.kill()
             game.state.start('state3');
-        }
+        }*/
     },
     rockLand: function(r, l){
         r.kill();
@@ -429,8 +446,14 @@ demo.state2.prototype = {
     killEnemy: function(b, e){
         b.kill();
         e.life = e.life - 1;
+        if (e == boss){
+            bredHP.width = (e.life/5) * 390;
+        }
         if (e.life < 1) {
             e.kill();
+            if (e == boss){
+                bblackHP.width = 0;
+            }
         }
     },
     meleeEnemyL: function(s, e){
