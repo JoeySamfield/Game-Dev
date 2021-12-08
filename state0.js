@@ -1,5 +1,5 @@
 
-var demo = {},centerX = 600/2, centerY = 300/2, turn = true, midClimb = false, nextFire = 0, arrowRate = 1000, revolverRate = 500, charWeapon = "Bow", char1, bullet, arrow, land, platform, stone, tall, chest, charHP = 100, rockRate = 2000, rollerRate = 3000, nextOrb2 = 0, nextRock1 = 0, nextRock2 = 0, nextRock3 = 0, nextRock4 = 0, last_dir;
+var demo = {},centerX = 600/2, centerY = 300/2, turn = true, midClimb = false, nextFire = 0, arrowRate = 1000, revolverRate = 500, charWeapon = "Bow", char1, bullet, arrow, land, platform, stone, tall, chest, charHP = 100, rockRate = 2000, rollerRate = 3000, nextOrb2 = 0, nextRock1 = 0, nextRock2 = 0, nextRock3 = 0, nextRock4 = 0, last_dir, nextShot = 0;
 
 
 demo.state0 = function(){};
@@ -52,6 +52,11 @@ demo.state0.prototype = {
         game.load.image('try', 'pix/try.png')
         game.load.image('cave', 'pix/cave.png');
         game.load.image('begin', 'pix/begin.png');
+
+        game.load.audio('cave_sounds', 'pix/cave_sounds.wav');
+        game.load.audio('slash', 'pix/slash.wav');
+        game.load.audio('arrow_sound', 'pix/arrow_sound.wav');
+        game.load.audio('gunshot', 'pix/gunshot.wav');
     
 
 
@@ -84,6 +89,12 @@ demo.state0.prototype = {
         //t.scale.setTo(.4, .4);
         begin = game.add.sprite(2000, 130, 'begin');
         begin.scale.setTo(.4, .4);
+
+        slash = game.add.audio('slash');
+
+        arrow_sound = game.add.audio('arrow_sound');
+
+        gunshot = game.add.audio('gunshot');
         
         
         //old text
@@ -321,9 +332,25 @@ demo.state0.prototype = {
         }      
         if (game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)){
             if (charWeapon == "Bow") {
-                shootBow()
+                shootBow();
+                if (nextBow == 0){
+                    arrow_sound.play();
+                    nextBow = game.time.now + 1000;
+                }
+                else if (game.time.now >= nextBow){
+                    arrow_sound.play();
+                    nextBow = game.time.now + 1000;
+                }
             } else {
                 fire();
+                if (nextShot == 0){
+                    gunshot.play();
+                    nextShot = game.time.now + 500;
+                }
+                else if (game.time.now >= nextShot){
+                    gunshot.play();
+                    nextShot = game.time.now + 500;
+                }
             }
         }
         if (game.input.keyboard.isDown(Phaser.Keyboard.W) && (obstacle || climber))
@@ -346,6 +373,14 @@ demo.state0.prototype = {
 
     if (game.input.keyboard.isDown(Phaser.Keyboard.F)){
         animateMelee();
+        if (nextSlash == 0){
+            slash.play();
+            nextSlash = game.time.now + 500
+        }
+        else if (game.time.now >= nextSlash){
+            slash.play();
+            nextSlash = game.time.now + 500;
+        }
     }
     if(chestPlayer){
         if (game.input.keyboard.isDown(Phaser.Keyboard.E)){

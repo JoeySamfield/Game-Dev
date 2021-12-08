@@ -38,6 +38,12 @@ demo.state2.prototype = {
         game.load.spritesheet('slash_L_2', 'pix/slash_L_2.png', 32, 32);
         game.load.spritesheet('slash_R_2', 'pix/slash_R_2.png', 32, 32);
 
+        game.load.audio('cave_sounds', 'pix/cave_sounds.wav');
+        game.load.audio('slash', 'pix/slash.wav');
+        game.load.audio('arrow_sound', 'pix/arrow_sound.wav');
+        game.load.audio('gunshot', 'pix/gunshot.wav');
+        game.load.audio('boss_music', 'pix/boss_music.mp3');
+
     },
     create: function(){
         game.physics.startSystem(Phaser.Physics.ARCADE);
@@ -67,6 +73,16 @@ demo.state2.prototype = {
         mountain_layer2 = map.createLayer('Tile Layer 2');
 
         map.setCollisionBetween(2, 188, true, 'Tile Layer 1');
+
+
+        slash = game.add.audio('slash');
+
+        arrow_sound = game.add.audio('arrow_sound');
+
+        gunshot = game.add.audio('gunshot');
+
+        boss_music = game.add.audio('boss_music');
+        boss_music.play();
     
 
         
@@ -292,13 +308,38 @@ demo.state2.prototype = {
     }      
     if (game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)){
         if (charWeapon == "Bow") {
-            shootBow()
+            shootBow();
+            if (nextBow == 0){
+                arrow_sound.play();
+                nextBow = game.time.now + 1000;
+            }
+            else if (game.time.now >= nextBow){
+                arrow_sound.play();
+                nextBow = game.time.now + 1000;
+            }
         } else {
             fire();
+            if (nextShot == 0){
+                gunshot.play();
+                nextShot = game.time.now + 500;
+            }
+            else if (game.time.now >= nextShot){
+                gunshot.play();
+                nextShot = game.time.now + 500;
+            }
         }
     }
     if (game.input.keyboard.isDown(Phaser.Keyboard.F)){
         animateMelee();
+        if (nextSlash == 0){
+            slash.play();
+            nextSlash = game.time.now + 500;
+        }
+        //if game.time.now >= game.time.now + 800
+        else if (game.time.now >= nextSlash){
+            slash.play();
+            nextSlash = game.time.now + 500;
+        }
     }
     
     if (game.input.keyboard.isDown(Phaser.Keyboard.W) && stand)

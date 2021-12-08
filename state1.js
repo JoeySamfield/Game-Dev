@@ -1,4 +1,4 @@
-var centerX = 600/2, centerY = 300/2, turn = true, nextFire = 0, arrowRate = 1000, revolverRate = 500, charWeapon = "Bow", midClimb = false, char1, bullet, arrow, land, platform, chest, charHP = 100, rockRate = 2000, rollerRate = 3000, nextOrb2 = 0, nextRock1 = 0, nextRock2 = 0, nextRock3 = 0, nextRock4 = 0, last_dir, peasant1Player, peasant1Text, p1_text_val, peasant1;
+var centerX = 600/2, centerY = 300/2, turn = true, nextFire = 0, arrowRate = 1000, revolverRate = 500, charWeapon = "Bow", midClimb = false, char1, bullet, arrow, land, platform, chest, charHP = 100, rockRate = 2000, rollerRate = 3000, nextOrb2 = 0, nextRock1 = 0, nextRock2 = 0, nextRock3 = 0, nextRock4 = 0, last_dir, peasant1Player, peasant1Text, p1_text_val, peasant1, cave_sounds, nextSlash = 0, nextBow = 0, nextShot = 0;
 
 demo.state1 = function(){};
 demo.state1.prototype = {
@@ -37,6 +37,11 @@ demo.state1.prototype = {
         game.load.spritesheet('slash_L_2', 'pix/slash_L_2.png', 32, 32);
         game.load.spritesheet('slash_R_2', 'pix/slash_R_2.png', 32, 32);
 
+        game.load.audio('cave_sounds', 'pix/cave_sounds.wav');
+        game.load.audio('slash', 'pix/slash.wav');
+        game.load.audio('arrow_sound', 'pix/arrow_sound.wav');
+        game.load.audio('gunshot', 'pix/gunshot.wav');
+
     },
     create: function(){
         game.physics.startSystem(Phaser.Physics.ARCADE);
@@ -52,6 +57,17 @@ demo.state1.prototype = {
         back_wall_2 = game.add.sprite(1024, 0);
         back_wall_2.height = 416;
         back_wall_2.width = 1024;
+
+        // VVVVV SOUNDS
+        cave_sounds = game.add.audio('cave_sounds');
+        cave_sounds.play();
+
+        slash = game.add.audio('slash');
+
+        arrow_sound = game.add.audio('arrow_sound');
+
+        gunshot = game.add.audio('gunshot');
+        // ^^^^^ SOUNDS
         
 
         var map = game.add.tilemap('cave_map');
@@ -346,13 +362,39 @@ demo.state1.prototype = {
     }      
     if (game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)){
         if (charWeapon == "Bow") {
-            shootBow()
+            shootBow();
+            if (nextBow == 0){
+                arrow_sound.play();
+                nextBow = game.time.now + 1000;
+            }
+            else if (game.time.now >= nextBow){
+                arrow_sound.play();
+                nextBow = game.time.now + 1000;
+            }
+            
         } else {
             fire();
+            if (nextShot == 0){
+                gunshot.play();
+                nextShot = game.time.now + 500;
+            }
+            else if (game.time.now >= nextShot){
+                gunshot.play();
+                nextShot = game.time.now + 500;
+            }
         }
     }
     if (game.input.keyboard.isDown(Phaser.Keyboard.F)){
         animateMelee();
+        if (nextSlash == 0){
+            slash.play();
+            nextSlash = game.time.now + 500;
+        }
+        //if game.time.now >= game.time.now + 800
+        else if (game.time.now >= nextSlash){
+            slash.play();
+            nextSlash = game.time.now + 500;
+        }
     }
     
     if (game.input.keyboard.isDown(Phaser.Keyboard.W) && stand)
