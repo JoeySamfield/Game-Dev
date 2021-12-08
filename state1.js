@@ -21,6 +21,7 @@ demo.state1.prototype = {
         //game.load.spritesheet('walk', "pix/walkBowArrow.png", 128, 128);
         game.load.spritesheet('walk', "pix/RevolverPlusClumb.png", 128, 128);
         game.load.spritesheet('rocker', "pix/rocker.png", 128, 128);
+        game.load.spritesheet('heart', "pix/heart.png", 1024, 1024);
         game.load.spritesheet('rocker_backwards', "pix/rocker.png", 128, 128);
         game.load.spritesheet('water_drip', 'pix/water_drip.png', 32, 96);
         game.load.spritesheet('wizard', "pix/redWizard.png", 128, 128);
@@ -87,24 +88,7 @@ demo.state1.prototype = {
         // create land group
         land = game.add.group()
         game.physics.enable(land);
-        land.enableBody = true;
-
-        //create ground
-        /*
-        var bottom = land.create(0, 350, 'purple')
-        bottom.width = 1000
-        bottom.body.immovable = true
-        //create ledges
-        //let platformList = [[0,260,30,500],[600,260,30,500], [800,150,50,500], [300,150,50,400], [500,70,30,500], [300,0,150,30],[0,80,30,150],[150,170,30,150]]
-        /*
-        for (i = 0; i < platformList.length; i++) {
-            platform = land.create(platformList[i][0],platformList[i][1],"purple")
-            platform.height = platformList[i][2]
-            platform.width = platformList[i][3]
-            platform.body.immovable = true
-        }
-        */
-        
+        land.enableBody = true;        
 
         //create health bar
         blackHP = land.create(25,275, "blackSquare")
@@ -140,6 +124,7 @@ demo.state1.prototype = {
         char1.anchor.x = .5
         char1.animations.add('walk', [0, 1, 2, 3, 4, 5,6,7,8,9,10,11,12,13,14,15]);
         char1.animations.add('climb', [16,17,18,19,20,19,18,17]);
+        charWeapon = "Bow"
 
         //add gravity and physics
         game.physics.arcade.enable(char1);
@@ -151,9 +136,7 @@ demo.state1.prototype = {
 
         //create game camera
         game.world.setBounds(0, 0, 2048, 416);
-        game.camera.follow(char1);
-        //game.camera.deadzone = new Phaser.Rectangle(centerX - 150, 75, 300, 50);
-        
+        game.camera.follow(char1);        
 
         //add bullets
         bullets = game.add.group();
@@ -217,8 +200,6 @@ demo.state1.prototype = {
         enemies.enableBody = true;
         enemies.physicsBodyType = Phaser.Physics.ARCADE;
         game.physics.arcade.enable(enemies);
-
-
 
         rWizard1 = enemies.create(700, 50, 'wizard');
         rWizard1.scale.setTo(-.30, .30)
@@ -297,16 +278,47 @@ demo.state1.prototype = {
         // add door
         door = game.add.sprite(2016, 32, 'door');
         game.physics.arcade.enable(door);
-        
 
         use_key = game.input.keyboard.addKey(Phaser.Keyboard.E);
         use_key.onDown.add(peasant1_dialogue, globalThis);
+
+        //add health pickup class
+        healthHeart = game.add.group()
+        game.physics.arcade.enable(healthHeart);
+        healthHeart.enableBody = true;
+        healthHeart.physicsBodyType = Phaser.Physics.ARCADE;
+
+        // add health pickups
+        heart1 = healthHeart.create(100,350, 'heart');
+        heart1.scale.setTo(-.025,.025)
+        heart1.anchor.x = .5
+        heart1.anchor.y = .5
+        heart1.body.gravity.y = 100;
+        heart1.body.collideWorldBounds = true;
+        heart1.animations.add("bounce",[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0]);
+
+        heart2 = healthHeart.create(1500,50, 'heart');
+        heart2.scale.setTo(-.025,.025)
+        heart2.anchor.x = .5
+        heart2.anchor.y = .5
+        heart2.body.gravity.y = 100;
+        heart2.body.collideWorldBounds = true;
+        heart2.animations.add("bounce",[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0]);
+
+        heart3 = healthHeart.create(1900,250, 'heart');
+        heart3.scale.setTo(-.025,.025)
+        heart3.anchor.x = .5
+        heart3.anchor.y = .5
+        heart3.body.gravity.y = 100;
+        heart3.body.collideWorldBounds = true;
+        heart3.animations.add("bounce",[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0]);
 
     },
     update: function(){
 
         var stand = game.physics.arcade.collide(char1, cave_layer); // land -> cave_layer
         var enemystand = game.physics.arcade.collide(enemies, cave_layer); // land -> cave_layer
+        var heartStand = game.physics.arcade.collide(healthHeart, cave_layer); // land -> cave_layer
         var fireballStand = game.physics.arcade.collide(fireball, cave_layer); // land -> cave_layer
         var speakersStand = game.physics.arcade.collide(speakers, cave_layer); // speakers collide with ground
         char1.body.velocity.x = 0;
@@ -320,10 +332,14 @@ demo.state1.prototype = {
         game.physics.arcade.overlap(arrows, enemies, this.killEnemy);
         game.physics.arcade.overlap(slash_L_2, enemies, this.meleeEnemyL); // MELEE
         game.physics.arcade.overlap(slash_R_2, enemies, this.meleeEnemyR);
+        game.physics.arcade.overlap(healthHeart, char1, this.collectHeart); // collect health 
         game.physics.arcade.collide(chest, cave_layer);
         var chestPlayer = game.physics.arcade.collide(char1, chest);
         var peasant1Player = game.physics.arcade.overlap(char1, peasant1);
         var doorPlayer = game.physics.arcade.overlap(char1, door);
+        heart1.animations.play('bounce', 20, true);
+        heart2.animations.play('bounce', 20, true);
+        heart3.animations.play('bounce', 20, true);
 
         // ALIGN slash/hurtboxes to player sides
         slash_L_2.alignTo(char1, Phaser.TOP_CENTER, -15, -35);
@@ -412,8 +428,6 @@ demo.state1.prototype = {
     } else {
         midClimb = false
     }
-
-    
     
     // rocker throw rocks
     if(rWizard1.life > 0){
@@ -522,6 +536,7 @@ demo.state1.prototype = {
         if (charHP == 0) {
             char1.kill()
             chipped_blade.kill()
+            charHP = 100
             game.state.start('state3');
         }
     },
@@ -554,8 +569,15 @@ demo.state1.prototype = {
                 }
             }
         }
-    }
+    },
+    collectHeart: function(c, h){
+        if (charHP != 100) {
+            charHP = charHP + 20 
+            h.kill()
+            redHP.width = charHP*2
+        } 
 
+    }
 
 
 }

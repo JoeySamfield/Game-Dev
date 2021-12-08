@@ -267,6 +267,7 @@ demo.state0.prototype = {
         game.physics.arcade.overlap(slash_L_2, enemies, this.meleeEnemyL); // MELEE
         game.physics.arcade.overlap(slash_R_2, enemies, this.meleeEnemyR);
         game.physics.arcade.collide(char1, cave, this.enter);
+        //game.physics.arcade.collide(arrows, cave_layer, this.hitWall);
 
         // ALIGN slash/hurtboxes to player sides
         slash_L_2.alignTo(char1, Phaser.TOP_CENTER, -15, -35);
@@ -395,8 +396,7 @@ demo.state0.prototype = {
     hitWall: function(b){
         //console.log('Hit wall');
         b.kill();
-    
-},
+    },
     killEnemy: function(b, e){
         b.kill();
         e.life = e.life - 1;
