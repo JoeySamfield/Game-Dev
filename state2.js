@@ -1,4 +1,4 @@
-var centerX = 600/2, centerY = 300/2, turn = true, nextFire = 0, arrowRate = 1000, revolverRate = 500, charWeapon = "Bow", midClimb = false, char1, bullet, arrow, land, platform, chest, charHP = 100, rockRate = 2000, rollerRate = 3000, nextOrb2 = 0, nextRock1 = 0, nextRock2 = 0, nextRock3 = 0, nextRock4 = 0, last_dir, peasant1Player, peasant1Text, p1_text_val, peasant1;
+var centerX = 600/2, centerY = 300/2, turn = true, nextFire = 0, arrowRate = 1000, revolverRate = 500, charWeapon = "Bow", midClimb = false, char1, bullet, arrow, land, platform, chest, charHP = 100, rockRate = 2000, rollerRate = 3000, nextOrb2 = 0, nextRock1 = 0, nextRock2 = 0, nextRock3 = 0, nextRock4 = 0, last_dir, peasant1Player, peasant1Text, p1_text_val, peasant1, end;
 
 demo.state2 = function(){};
 demo.state2.prototype = {
@@ -372,6 +372,9 @@ demo.state2.prototype = {
         midClimb = false
     }
     
+    if (game.time.now > (end + 2000)){
+        game.state.start('state4');
+    }
     
     // rocker throw rocks
 
@@ -435,10 +438,10 @@ demo.state2.prototype = {
         r.kill();
         charHP = charHP - 20
         redHP.width = charHP*2
-        /*if (charHP == 0) {
+        if (charHP == 0 && boss.life > 0) {
             char1.kill()
             game.state.start('state3');
-        }*/
+        }
     },
     rockLand: function(r, l){
         r.kill();
@@ -453,6 +456,7 @@ demo.state2.prototype = {
             e.kill();
             if (e == boss){
                 bblackHP.width = 0;
+                end = game.time.now;
             }
         }
     },
