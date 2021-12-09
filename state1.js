@@ -61,6 +61,7 @@ demo.state1.prototype = {
 
         // VVVVV SOUNDS
         cave_sounds = game.add.audio('cave_sounds');
+        cave_sounds.loop = true
         cave_sounds.play();
 
         slash = game.add.audio('slash');

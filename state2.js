@@ -68,6 +68,7 @@ demo.state2.prototype = {
         gunshot = game.add.audio('gunshot');
 
         boss_music = game.add.audio('boss_music');
+        boss_music.loop = true
         boss_music.play();
     
         // create land group

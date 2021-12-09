@@ -69,6 +69,7 @@ demo.state0.prototype = {
         sunrise.width = 2304;
 
         cave_sounds = game.add.audio('cave_sounds');
+        cave_sounds.loop = true
         cave_sounds.play();
 
         back_wall = game.add.sprite(0, 0, "back_wall"); // NEW CAVE BACKGROUND
@@ -99,32 +100,12 @@ demo.state0.prototype = {
 
         gunshot = game.add.audio('gunshot');
         
-        
-        //old text
-        /*var style = { font: "32px Jazz LET, fantasy", fill: "#fff", boundsAlignH: "center", boundsAlignV: "middle" };
-        var style1 = { font: "20px Jazz LET, fantasy", fill: "#fff", boundsAlignH: "center", boundsAlignV: "middle" };
-        text = game.add.text(0,0, "Pratorium 3000", style);
-        //text.style.fontFamily = 'Arial, Helvetica, sans-serif';
-        text.setTextBounds(0, 100, 600, -150);
-        wasd = game.add.text(0,0,"Use W, A, and D to run and jump. Hold W and either A or D to climb walls", style1);
-        wasd.setTextBounds(0, 100, 600, -50);
-        space = game.add.text(0,0, "Press Spacebar to shoot", style)
-        space.setTextBounds(0, 100, 600, 50);
-        f = game.add.text(0,0, "Press F to melee", style)
-        f.setTextBounds(0,100,600, 150);
-        e = game.add.text(0, 0, "Press E to open Chests", style)
-        e.setTextBounds(0, 100, 600, 250);
-        click = game.add.text(0, 0, "Click anywhere to begin!", style);
-        click.setTextBounds(0, 100, 600, 350);
-        */
-
         land = game.add.group()
         game.physics.enable(land);
         land.enableBody = true;
         
 
         //create ground
-        
         list = [];
         for (i = 0; 64*i < 2496; i++){
             list[i] = 64*i;
@@ -160,7 +141,7 @@ demo.state0.prototype = {
 
         char1.animations.add('climb', [16, 17, 18, 19, 20, 19, 18, 17]);
 
-        stone = game.add.sprite(450, 257, 'stone');
+        stone = land.create(450, 257, 'stone');
         stone.scale.setTo(.1, .1);
         stone.anchor.x = .5;
         stone.anchor.y = .5;
@@ -168,12 +149,14 @@ demo.state0.prototype = {
         stone.enableBody = true;
         stone.body.immovable = true;
 
-        tall = game.add.sprite(750, 216, 'tall');
+        wall = game.add.group()
+        game.physics.enable(wall);
+        wall.enableBody = true;
+
+        tall = wall.create(750, 216, 'tall');
         tall.scale.setTo(1, 1);
         tall.anchor.x = .5;
         tall.anchor.y = .5;
-        game.physics.arcade.enable(tall)
-        tall.enableBody = true;
         tall.body.immovable = true;
 
         chest = game.add.sprite(1730, 259, 'chestClosed');
@@ -270,7 +253,8 @@ demo.state0.prototype = {
         game.physics.arcade.overlap(slash_L_2, enemies, this.meleeEnemyL); // MELEE
         game.physics.arcade.overlap(slash_R_2, enemies, this.meleeEnemyR);
         game.physics.arcade.collide(char1, cave, this.enter);
-        //game.physics.arcade.collide(arrows, cave_layer, this.hitWall);
+        game.physics.arcade.collide(arrows, land, this.hitWall);
+        game.physics.arcade.collide(arrows, wall, this.hitWall);
 
         // ALIGN slash/hurtboxes to player sides
         slash_L_2.alignTo(char1, Phaser.TOP_CENTER, -15, -35);
