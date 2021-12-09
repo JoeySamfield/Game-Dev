@@ -60,7 +60,6 @@ demo.state2.prototype = {
 
         map.setCollisionBetween(2, 188, true, 'Tile Layer 1');
 
-
         slash = game.add.audio('slash');
 
         arrow_sound = game.add.audio('arrow_sound');
@@ -369,6 +368,7 @@ demo.state2.prototype = {
         }
         if (e.life < 1) {
             e.kill();
+            charHP = 100
             if (e == boss){
                 bblackHP.width = 0;
                 end = game.time.now;
