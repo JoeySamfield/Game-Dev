@@ -68,6 +68,9 @@ demo.state0.prototype = {
         sunrise.height = 400;
         sunrise.width = 2304;
 
+        cave_sounds = game.add.audio('cave_sounds');
+        cave_sounds.play();
+
         back_wall = game.add.sprite(0, 0, "back_wall"); // NEW CAVE BACKGROUND
         back_wall.height = 400;
         back_wall.width = 2304;
